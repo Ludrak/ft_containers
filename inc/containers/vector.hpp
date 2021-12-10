@@ -5,8 +5,7 @@
 # include <iostream>
 # include <string>
 # include <stdexcept>
-# include "iterator.hpp"
-# include "reverse_iterator.hpp"
+# include "type_traits.hpp"
 
 namespace ft
 {
@@ -37,10 +36,10 @@ namespace ft
             class iterator
             {
                 public:
-                    typedef ptrdiff_t							difference_type;
-					typedef T									value_type;
-					typedef value_type*							pointer;
-					typedef value_type&							reference;
+                    typedef ptrdiff_t                           difference_type;
+					typedef T                                   value_type;
+					typedef value_type*                         pointer;
+					typedef value_type&                         reference;
                     ft::random_access_iterator_tag              iterator_category;
                 // TODO implement unimplemented operators
             };
@@ -48,10 +47,10 @@ namespace ft
             class const_iterator
             {
                 public:
-                    typedef ptrdiff_t							difference_type;
-					typedef T									value_type;
-					typedef value_type*							pointer;
-					typedef value_type&							reference;
+                    typedef ptrdiff_t                           difference_type;
+					typedef T                                   value_type;
+					typedef value_type*                         pointer;
+					typedef value_type&                         reference;
                     ft::random_access_iterator_tag              iterator_category;
                 // TODO implement unimplemented operators
             };

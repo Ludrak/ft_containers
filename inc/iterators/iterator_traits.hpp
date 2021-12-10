@@ -1,6 +1,6 @@
 
-#ifndef ITERATOR_HPP
-# define ITERATOR_HPP
+#ifndef ITERATOR_TRAITS_HPP
+# define ITERATOR_TRAITS_HPP
 
 # include <iostream>
 # include <string>
@@ -59,4 +59,4 @@ namespace ft
     };
 } 
 
-#endif // ITERATOR_HPP
+#endif // ITERATOR_TRAITS_HPP
