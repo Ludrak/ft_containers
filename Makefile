@@ -1,7 +1,7 @@
 .PHONY: clean fclean re all os check_sources check_headers
 
 # Name of target executable
-NAME		= ft_irc
+NAME		= ft_containers
 
 # Locations 
 SRC_DIR		= src

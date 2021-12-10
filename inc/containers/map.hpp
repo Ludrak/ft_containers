@@ -6,6 +6,9 @@
 # include <stdexcept>
 # include "reverse_iterator.hpp"
 # include "functionnal_base.hpp"
+# include "utility.hpp"
+
+#include <map>
 
 namespace ft
 {
@@ -14,7 +17,8 @@ namespace ft
     class T,
     class Compare = ft::less<Key>,
     class Allocator = std::allocator<ft::pair<const Key, T> >
-    > class map
+    > 
+    class map
     {
         public:
 
@@ -33,6 +37,23 @@ namespace ft
             typedef typename allocator_type::size_type       size_type;
             typedef typename allocator_type::difference_type difference_type;
 
+            class value_compare : public binary_function<value_type, value_type, bool>
+            {
+                private:
+                    friend class map;
+
+                protected:
+                    key_compare comp;
+
+                    value_compare(key_compare c) : comp(c)
+                        { }
+
+                public:
+                    bool operator()(const value_type& x, const value_type& y) const
+                        { return comp(x.first, y.first); }
+            };
+
+
 
             /*  ITERATORS
              *  =========
@@ -46,7 +67,7 @@ namespace ft
 					typedef value_type&                         reference;
                     ft::random_access_iterator_tag              iterator_category;
                 // TODO implement unimplemented operators
-            }
+            };
 
             class const_iterator
             {
@@ -57,10 +78,11 @@ namespace ft
 					typedef value_type&                         reference;
                     ft::random_access_iterator_tag              iterator_category;
                 // TODO implement unimplemented operators
-            }
+            };
 
             typedef ft::reverse_iterator<iterator>           reverse_iterator;
             typedef ft::reverse_iterator<const_iterator>     const_reverse_iterator;
+
 
 
             /*  CONSTRUCTORS / DESTRUCTORS
@@ -77,6 +99,7 @@ namespace ft
             map (const map& x);
 
             ~map();
+
 
 
             /*  MEMBER FUNCTIONS
@@ -154,12 +177,14 @@ namespace ft
             value_compare                           value_comp() const;
 
 
+
             /*  OPERATORS
              *  =========
              */
             map                     operator= (const map& x);
 
             mapped_type&            operator[](const key_type& k);
+
 
 
             /*  RELATIONNAL OPERATORS
@@ -183,14 +208,14 @@ namespace ft
             friend bool             operator>=( const map<Key, T, Compare, Allocator>& lhs,
                                                 const map<Key, T, Compare, Allocator>& rhs );
 
+
+
             /*  NON MEMBER FUNCTIONS
              *  ====================
              */
-            friend void                             swap (map<Key, T, Compare, Allocator>& x
+            friend void                             swap (map<Key, T, Compare, Allocator>& x,
                                                             map<Key, T, Compare, Allocator>& y);
-
     };
 }
-
 
 #endif // MAP_HPP

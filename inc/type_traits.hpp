@@ -4,7 +4,6 @@
 # include "iterator_traits.hpp"
 
 /* This was all originaly implemented in C++11 however subject imposes to rewrite it */
-
 namespace ft
 {
     /* --- Helper Class --- */
@@ -49,10 +48,6 @@ namespace ft
     template<>        struct is_integral<long long>             : public true_type {};
     template<>        struct is_integral<unsigned long long>    : public true_type {};
 
-
-
-
-   
 
 
     // REVIEW unused ? 
