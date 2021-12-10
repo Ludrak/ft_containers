@@ -1,4 +1,3 @@
-
 #ifndef VECTOR_HPP
 # define VECTOR_HPP
 
@@ -168,7 +167,7 @@ namespace ft
              *  =========
              */
 
-            vector&                 operator=(const vector& x);
+            vector&                 operator= (const vector& x);
 
             reference               operator[](size_type n);
             const_reference         operator[](size_type n) const;
@@ -179,12 +178,12 @@ namespace ft
             /* NON MEMBER OPERATORS FRIENDS
             *  ============================
             */
-            friend bool             operator== (const vector<T, Allocator>& lhs, const vector<T, Allocator>& rhs);
-            friend bool             operator!= (const vector<T, Allocator>& lhs, const vector<T, Allocator>& rhs);
-            friend bool             operator<  (const vector<T, Allocator>& lhs, const vector<T, Allocator>& rhs);
-            friend bool             operator<= (const vector<T, Allocator>& lhs, const vector<T, Allocator>& rhs);
-            friend bool             operator>  (const vector<T, Allocator>& lhs, const vector<T, Allocator>& rhs);
-            friend bool             operator>= (const vector<T, Allocator>& lhs, const vector<T, Allocator>& rhs);
+            friend bool             operator==(const vector<T, Allocator>& lhs, const vector<T, Allocator>& rhs);
+            friend bool             operator!=(const vector<T, Allocator>& lhs, const vector<T, Allocator>& rhs);
+            friend bool             operator< (const vector<T, Allocator>& lhs, const vector<T, Allocator>& rhs);
+            friend bool             operator<=(const vector<T, Allocator>& lhs, const vector<T, Allocator>& rhs);
+            friend bool             operator> (const vector<T, Allocator>& lhs, const vector<T, Allocator>& rhs);
+            friend bool             operator>=(const vector<T, Allocator>& lhs, const vector<T, Allocator>& rhs);
 
 
             /* NON MEMBER OVERLOADS FRIENDS
