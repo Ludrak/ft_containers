@@ -1,10 +1,6 @@
 #ifndef ITERATOR_TRAITS_HPP
 # define ITERATOR_TRAITS_HPP
 
-# include <iostream>
-# include <string>
-# include <stdexcept>
-
 namespace ft
 {
     /*  TAGS
@@ -15,12 +11,6 @@ namespace ft
     struct forward_iterator_tag : public input_iterator_tag { };
     struct bidirectional_iterator_tag : public forward_iterator_tag { };
     struct random_access_iterator_tag : public bidirectional_iterator_tag { };
-
-    typedef input_iterator_tag          _input_iterator_tag;
-    typedef output_iterator_tag         _output_iterator_tag; 
-    typedef forward_iterator_tag        _forward_iterator_tag; 
-    typedef bidirectional_iterator_tag  _bidirectional_iterator_tag; 
-    typedef random_access_iterator_tag  _random_access_iterator_tag; 
 
 
     /*  TRAITS
@@ -40,9 +30,9 @@ namespace ft
     struct iterator_traits<T*>
     {
         typedef T                           value_type;
+        typedef ptrdiff_t                   difference_type;
         typedef T*                          pointer;
         typedef T&                          reference;
-        typedef ptrdiff_t                   difference_type;
         typedef random_access_iterator_tag  iterator_category;
     };
 
