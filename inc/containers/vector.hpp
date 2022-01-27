@@ -152,6 +152,8 @@
 # include "algorithm.hpp"
 # include <stdexcept>
 
+#include <vector>
+
 namespace ft
 {
     template<class T, typename Allocator = std::allocator<T> >
@@ -169,7 +171,7 @@ namespace ft
             typedef typename allocator_type::pointer            pointer;
             typedef typename allocator_type::const_pointer      const_pointer;
             typedef ptrdiff_t                                   difference_type;
-			typedef	size_t                                      size_type;
+			typedef size_t                                      size_type;
 
 
 
@@ -198,6 +200,11 @@ namespace ft
 
 					~iterator() {}
 
+                    value_type                          base() const
+                    {
+                        return (this->_value);
+                    }
+
 					iterator							&operator=(const iterator &rhs)
 					{
 						if ( this != &rhs)
@@ -213,25 +220,25 @@ namespace ft
 
 					pointer								operator->(void) const
 					{
-						return (this->value);
+						return (this->_value);
 					}
 					
-					iterator::difference_type			operator+(const iterator & rhs)
+					iterator::difference_type			operator+(const iterator & rhs) const
 					{
 						return (this->_value + rhs._value);
 					}
 					
-					iterator::difference_type			operator-(const iterator & rhs)
+					iterator::difference_type			operator-(const iterator & rhs) const
 					{
 						return (this->_value - rhs._value);
 					}
 					
-					iterator							operator+(difference_type n)
+					iterator							operator+(difference_type n) const
 					{
 						return iterator(this->_value + n);
 					}
 					
-					iterator							operator-(difference_type n)
+					iterator							operator-(difference_type n) const
 					{
 						return iterator(this->_value - n);
 					}
@@ -248,11 +255,13 @@ namespace ft
 						return *this;
 					}
 
-					bool								operator!=(const iterator &rhs) const {
+					bool								operator!=(const iterator &rhs) const
+                    {
 						return (this->_value != rhs._value);
 					}
 
-					bool								operator==(const iterator &rhs) const {
+					bool								operator==(const iterator &rhs) const
+                    {
 						return (this->_value == rhs._value);
 					}
 					
@@ -281,22 +290,22 @@ namespace ft
 						--this->_value;
 						return copy;
 					}
-					bool				operator<(const iterator& rhs)
+					bool				operator<(const iterator& rhs) const
 					{
 						return (this->_value < rhs._value);
 					}
 					
-					bool				operator>(const iterator& rhs)
+					bool				operator>(const iterator& rhs) const
 					{
 						return (this->_value > rhs._value);
 					}
 					
-					bool				operator<=(const iterator& rhs)
+					bool				operator<=(const iterator& rhs) const
 					{
 						return (this->_value <= rhs._value);
 					}
 					
-					bool				operator>=(const iterator& rhs)
+					bool				operator>=(const iterator& rhs) const
 					{
 						return (this->_value >= rhs._value);
 					}
@@ -306,7 +315,7 @@ namespace ft
             {
                 public:
                     typedef ptrdiff_t                           difference_type;
-					typedef T                                   value_type;
+					typedef const T                             value_type;
 					typedef value_type*                         pointer;
 					typedef value_type&                         reference;
                     typedef ft::random_access_iterator_tag      iterator_category;
@@ -323,6 +332,11 @@ namespace ft
 
 					~const_iterator() { }
 
+                    value_type                              base() const
+                    {
+                        return (this->_value);
+                    }
+
 					const_iterator&                         operator=(const const_iterator &rhs)
 					{
 						if ( this != &rhs)
@@ -333,30 +347,32 @@ namespace ft
 
 					reference								operator*(void) const
 					{
-						return *(this->_value);
+                        if (this->_value)
+						    return *(this->_value);
+                        throw std::out_of_range("cannot dereference on null data");
 					}
 
 					pointer									operator->(void) const
 					{
-						return (this->value);
+						return (this->_value);
 					}
 					
-					const_iterator::difference_type			operator+(const const_iterator & rhs)
+					const_iterator::difference_type			operator+(const const_iterator &rhs) const
 					{
 						return (this->_value + rhs._value);
 					}
 					
-					const_iterator::difference_type			operator-(const const_iterator & rhs)
+					const_iterator::difference_type			operator-(const const_iterator &rhs) const
 					{
 						return (this->_value - rhs._value);
 					}
 					
-					const_iterator							operator+(difference_type n)
+					const_iterator							operator+(difference_type n) const
 					{
 						return const_iterator(this->_value + n);
 					}
 					
-					const_iterator							operator-(difference_type n)
+					const_iterator							operator-(difference_type n) const
 					{
 						return const_iterator(this->_value - n);
 					}
@@ -373,11 +389,13 @@ namespace ft
 						return *this;
 					}
 
-					bool									operator!=(const const_iterator &rhs) const {
+					bool									operator!=(const const_iterator &rhs) const
+                    {
 						return (this->_value != rhs._value);
 					}
 					
-					bool									operator==(const const_iterator &rhs) const {
+					bool									operator==(const const_iterator &rhs) const
+                    {
 						return (this->_value == rhs._value);
 					}
 					const_iterator&                         operator++(void)
@@ -406,22 +424,22 @@ namespace ft
 						return cpy;
 					}
 
-					bool									operator<(const const_iterator& rhs)
+					bool									operator<(const const_iterator& rhs) const
 					{
 						return (this->_value < rhs._value);
 					}
 					
-					bool									operator>(const const_iterator& rhs)
+					bool									operator>(const const_iterator& rhs) const
 					{
 						return (this->_value > rhs._value);
 					}
 					
-					bool									operator<=(const const_iterator& rhs)
+					bool									operator<=(const const_iterator& rhs) const
 					{
 						return (this->_value <= rhs._value);
 					}
 					
-					bool									operator>=(const const_iterator& rhs)
+					bool									operator>=(const const_iterator& rhs) const
 					{
 						return (this->_value >= rhs._value);
 					}
@@ -439,11 +457,13 @@ namespace ft
 
             explicit vector(const allocator_type& alloc = allocator_type())
             : _data(NULL), _capacity(0), _size(0), _allocator(alloc)
-            {};
+            {
+            }
            
+
             explicit vector(size_type n, const value_type& val = value_type(),
-                                                    const allocator_type& alloc = allocator_type())
-            : _data(NULL), _capacity(0), _size(0), _allocator(alloc)
+                                    const allocator_type& alloc = allocator_type())
+            : _data(NULL), _capacity(n), _size(n), _allocator(alloc)
             {
                 size_type i = 0;
                 this->_data = this->_allocator.allocate(n);
@@ -452,16 +472,25 @@ namespace ft
                     this->_allocator.construct(&this->_data[i], val);
                     ++i;
                 }
-                this->_size = n;
-                this->_capacity = n;
             }
            
-            template <class InputIterator>
-            vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type());
-           
-            vector(const vector& x) : _data(x._data), _capacity(x._capacity), _size(x._size), _allocator(x._allocator) { }
 
-            virtual ~vector(void) { this->_allocator.destroy(_data); }
+            template <class InputIterator>
+            vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type());
+           
+
+            vector(const vector& x)
+            : _data(x._data), _capacity(x._capacity), _size(x._size), _allocator(x._allocator)
+            {
+            }
+
+
+
+            virtual ~vector(void)
+            {
+                this->_allocator.deallocate(this->_data, this->_capacity);
+                this->_allocator.destroy(this->_data);
+            }
 
 
 
@@ -474,46 +503,47 @@ namespace ft
             //begin
             iterator                begin()
             {
-                return (vector<T, Allocator>::iterator(this->_data));
+                return (iterator(this->_data));
             }
 
             const_iterator          begin() const
             {
-                return (vector<T, Allocator>::const_iterator(this->_data));
+                return (const_iterator(this->_data));
             }
 
 
             //end
             iterator                end()
             {
-                return (vector<T, Allocator>::iterator(&this->_data[this->_size]));
+                return (iterator(&this->_data[this->_size]));
             }
 
             const_iterator          end() const
             {
-                return (vector<T, Allocator>::const_iterator(&this->_data[this->_size]));
+                return (const_iterator(&this->_data[this->_size]));
             }
 
 
             //rbegin
             reverse_iterator        rbegin()
             {
-                return (vector<T, Allocator>::reverse_iterator(&this->_data[this->_size - 1]));
-            } 
+                return (reverse_iterator(&this->_data[this->_size - 1]));
+            }
+
             const_reverse_iterator  rbegin() const
             {
-                return (vector<T, Allocator>::const_reverse_iterator(&this->_data[this->_size - 1]));
+                return (const_reverse_iterator(&this->_data[this->_size - 1]));
             } 
 
             //rend
             reverse_iterator        rend()
             {
-                return (vector<T, Allocator>::reverse_iterator(&this->_data[this->_size - 1]));
+                return (reverse_iterator(&this->_data[this->_size - 1]));
             }
 
             const_reverse_iterator  rend() const
             {
-                return (vector<T, Allocator>::const_reverse_iterator(&this->_data[this->_size - 1]));
+                return (const_reverse_iterator(&this->_data[this->_size - 1]));
             }
 
             
@@ -560,21 +590,9 @@ namespace ft
 
 
             //assign
-            void                    assign (size_type n, const value_type& val)
-            {
-                size_type i = 0;
-
-                this->reserve(n);
-                this->resize(n);
-                while (i < n)
-                    this->_allocator.construct(&this->_data[i++], val);
-            }
-
             template <class InputIterator>
-            void                    assign (
-                typename ft::enable_if< ft::is_iterator<InputIterator>::value, InputIterator >::type first,
-                typename ft::enable_if< ft::is_iterator<InputIterator>::value, InputIterator >::type last
-            )
+            typename ft::enable_if<ft::is_iterator<InputIterator>::value, void>::type
+            assign (InputIterator first, InputIterator last)
             {
                 vector<T, Allocator>::size_type i = 0;
                 vector<T, Allocator>::difference_type size = std::abs(first - last);
@@ -587,6 +605,13 @@ namespace ft
                 }
             }
 
+            
+            void                    assign (size_type n, const value_type& val)
+            {
+                this->reserve(n);
+                this->resize(n, val);
+            }
+
 
             //capacity
             size_type               capacity() const
@@ -597,7 +622,11 @@ namespace ft
             //clear
             void                    clear()
             {
-                // TODO destroy_data
+                size_type   i = 0;
+
+                while (i < this->_size)
+                    this->_allocator.destroy(this->_data + i++);
+                this->_size = 0;
             }
 
             //empty
@@ -697,23 +726,30 @@ namespace ft
             }       
             
             template <class InputIterator>
-            void                    insert(
-                iterator position,
-                typename ft::enable_if<ft::is_iterator<InputIterator>::value>::type first,
-                typename ft::enable_if<ft::is_iterator<InputIterator>::value>::type last
-                )
+            typename ft::enable_if<ft::is_iterator<InputIterator>::value, void>::type
+            insert(iterator position, InputIterator first, InputIterator last)
             {
-                // TODO insert w/ inputiterator
-                (void)position;
-                (void)first;
-                (void)last;
+                size_type	index;
+                size_type	size_buf = this->size();
+                size_type   new_size = last - first;
+
+                if (new_size <= 0)
+                    return ;
+                this->reserve(this->_size + new_size);
+                this->_size += new_size;
+                index = position - this->begin();
+                while (--size_buf >= index)
+                    this->_data[size_buf + new_size] = this->_data[size_buf];
+                size_buf = index + new_size;
+                while (--size_buf >= index)
+                    this->_data[size_buf] = value_type(*(last-- - 1));
+                return ;
             }       
 
             //max_size
             size_type               max_size() const
             {
-                // TODO ft::numeric_limits
-                return std::numeric_limits<difference_type>::max();
+                return this->_allocator.max_size();
             }
 
             //pop_back
@@ -729,8 +765,13 @@ namespace ft
             //push_back
             void                    push_back(const value_type& val)
             {
-                if (this->_size == this->_capacity)
-                    this->reserve(this->_size + 1);
+                if (this->_size + 1 >= this->_capacity)
+                {
+                    if (capacity() == 0)
+                        this->reserve(1);
+                    else
+                        this->reserve(this->_capacity * 2);
+                }
                 
                 this->_allocator.construct(&this->_data[this->_size], val);
                 ++this->_size;
@@ -748,10 +789,9 @@ namespace ft
 
                 if (n > this->max_size())
                     n = this->max_size();
-                if (this->_capacity == 0)
-                    ++this->_capacity;
-                while (this->_capacity < n)
-                    this->_capacity *= 2;
+                if (this->_capacity < n)
+                    this->_capacity = n;
+                
                 value_type  *buf = this->_allocator.allocate(this->_capacity);
                 while (i < this->_size)
                 {
@@ -816,9 +856,10 @@ namespace ft
 
             vector&                 operator= (const vector& x)
             {
-                this->_data = x._data;
-                this->_capacity = x.capacity;
-                this->_size = x._size;
+                this->clear();
+                this->reserve(x.capacity());
+                this->assign(x.begin(), x.end());
+                return (*this);
             }
 
             reference               operator[](size_type n)
@@ -888,8 +929,11 @@ namespace ft
     /* NON MEMBER OVERLOADS FRIENDS
     *  ============================
     */
-
-    //void             swap (vector<T, Allocator>& x, vector<T, Allocator>& y);
+    template<class T, class Allocator>
+    void             swap (vector<T, Allocator>& x, vector<T, Allocator>& y)
+    {
+        x.swap(y);
+    }
 }
 
 #endif // VECTOR_HPP

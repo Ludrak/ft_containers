@@ -24,7 +24,7 @@ namespace ft
     }
 
     template <class InputIterator1, class InputIterator2, class BinaryPredicate>
-	bool equal (
+	bool    equal (
 		typename ft::enable_if< is_iterator<InputIterator1>::value, InputIterator1 >::type first1,
 		InputIterator1                                                                     last1,
 		typename ft::enable_if< is_iterator<InputIterator2>::value, InputIterator2 >::type first2,

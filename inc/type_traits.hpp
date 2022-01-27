@@ -1,6 +1,8 @@
 #ifndef TYPE_TRAITS_HPP
 # define TYPE_TRAITS_HPP
 
+#include <vector>
+
 // /* --- Helper Class --- */
 //
 // template<class T, T v>
@@ -81,7 +83,8 @@ namespace ft
     template<bool B, class T = void>
     struct  enable_if {};
 
-    template<class T> struct  enable_if<true, T> { typedef T   type; };
+    template<class T>
+    struct  enable_if<true, T> { typedef T   type; };
 
 
     /* --- Primary Classification Traits --- */
@@ -105,16 +108,14 @@ namespace ft
 
 
     template<class Iterator, class T = void>
-    struct is_iterator
+    struct is_iterator : public false_type 
     {
-        static const bool   value = false;
     };
 
     template<class Iterator>
-    struct is_iterator<Iterator>
+    struct is_iterator<Iterator> : public true_type
     {
         typedef typename ft::iterator_traits<Iterator>::iterator_category it;
-        static const bool   value = true;
     };
 }
 

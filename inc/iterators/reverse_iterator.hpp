@@ -26,11 +26,12 @@ namespace ft
             // /*  CONSTRUCTORS
             // *   ============
             // */
-            reverse_iterator();
+            reverse_iterator() : _base() { }
             
             explicit                reverse_iterator(iterator_type x) : _base(x) { };
             
-            reverse_iterator(const reverse_iterator<iterator_type>& u) : _base(u._base) { };
+            template<class U>
+            reverse_iterator(reverse_iterator<U>& u) : _base(u.base()) { };
 
 
 
@@ -59,24 +60,24 @@ namespace ft
             /* Increment Operators */
             reverse_iterator&       operator++()
             {
-                this->_base.operator--();
+                --this->_base;
                 return (*this);
             }
 
             reverse_iterator        operator++(int)
             {
-                return(reverse_iterator(this->_base.operator--(0)));
+                return(reverse_iterator(this->_base.operator--));
             }
 
             reverse_iterator&       operator--()
             {
-                this->_base.operator++();
+                ++this->_base;
                 return (*this);
             }
 
             reverse_iterator        operator--(int)
             {
-                return(reverse_iterator(this->_base.operator++(0)));
+                return(reverse_iterator(this->_base.operator++));
             }
 
 
@@ -88,7 +89,7 @@ namespace ft
 
             pointer                 operator->() const
             {
-                return (&(*this->operator*()));
+                return (&(*this->_base));
             }
 
 
@@ -164,7 +165,7 @@ namespace ft
             template <class U>
             bool                    operator>=(const reverse_iterator<U> &rhs) const
             {
-                return (this->_base <= rhs.base()); 
+                return (this->_base.operator<=(rhs.base())); 
 		    }
 
         protected:

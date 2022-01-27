@@ -3,10 +3,11 @@
 # define ALGORITHM_HPP
 
 #include "type_traits.hpp"
+#include <algorithm>
 
 namespace ft
 {
-    template <class InputIterator1, class InputIterator2, class BinaryPredicate>
+    template <class InputIterator1, class InputIterator2>
 	bool lexicographical_compare (
 		typename ft::enable_if< is_iterator<InputIterator1>::value, InputIterator1 >::type  first1,
 		InputIterator1                                                                      last1,

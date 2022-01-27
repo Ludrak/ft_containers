@@ -19,7 +19,8 @@ SRCS=				main.cpp
 LIBRARYS	= 
 
 CLANG		=	clang++
-CPP_FLAGS	=	-Wextra -Wall -Werror -std=c++98 
+SANITIZER	=   -g3 
+CPP_FLAGS	=	-Wextra -Wall -Werror -std=c++98 $(SANITIZER)
 CPP_IFLAGS	=	
 
 CPP_LFLAGS	= 
