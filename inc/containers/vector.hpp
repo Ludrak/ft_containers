@@ -332,7 +332,7 @@ namespace ft
 
 					~const_iterator() { }
 
-                    value_type                              base() const
+                    T                                       base() const
                     {
                         return (this->_value);
                     }
@@ -475,8 +475,11 @@ namespace ft
             }
            
 
-            template <class InputIterator>
-            vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type());
+            vector (iterator first, iterator last, const allocator_type& alloc = allocator_type())
+            : _data(NULL), _capacity(0), _size(0), _allocator(alloc)
+            {
+                this->assign(first, last);
+            }
            
 
             vector(const vector& x)
@@ -882,7 +885,6 @@ namespace ft
             size_type       _capacity;
         	size_type       _size;
             allocator_type  _allocator;
-
     };
 
     /* NON MEMBER OPERATORS FRIENDS

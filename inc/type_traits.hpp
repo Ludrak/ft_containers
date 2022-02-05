@@ -76,7 +76,6 @@ namespace ft
 
     typedef integral_constant<bool, true>   true_type;
     typedef integral_constant<bool, false>  false_type;
-    
 
     /* --- Helper Traits --- */
 
@@ -86,6 +85,12 @@ namespace ft
     template<class T>
     struct  enable_if<true, T> { typedef T   type; };
 
+
+    template <class T, class U>
+    struct is_same : public false_type {};
+    
+    template <class T>
+    struct is_same<T, T> : public true_type {};
 
     /* --- Primary Classification Traits --- */
 
@@ -112,10 +117,13 @@ namespace ft
     {
     };
 
-    template<class Iterator>
-    struct is_iterator<Iterator> : public true_type
+    template<typename T>
+    struct is_iterator<
+    T, 
+    typename ft::enable_if<!ft::is_same<typename ft::iterator_traits<T>::value_type, void>::value>::type
+    >
+    : public true_type
     {
-        typedef typename ft::iterator_traits<Iterator>::iterator_category it;
     };
 }
 
