@@ -58,17 +58,19 @@ int main()
         std::cout << "printing tree: " << std::endl;
         bt.print();
         
+        /*
         bt.erase(12);
         bt.erase(11);
         bt.erase(10);
         bt.erase(5);
         bt.erase(4);
-        bt.erase (1);
-        bt.erase (2);
+        bt.erase(1);*/
+        bt.erase(2);
         bt.erase(3);
         bt.erase(9);
         bt.erase(8);
         bt.erase(7);
+        bt.erase(6);
         
 
         std::cout << "printing tree: " << std::endl;
@@ -103,7 +105,7 @@ int main()
 */
 
         int i = 0;
-        for (binary_tree<int>::iterator it = bt.begin(); it != bt.end(); it++)
+        for (binary_tree<int>::iterator it = bt.begin(); it != bt.end(); ++it)
         {
             std::cout << "value: " << *it << std::endl;
 

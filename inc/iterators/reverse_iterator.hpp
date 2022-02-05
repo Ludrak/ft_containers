@@ -66,7 +66,7 @@ namespace ft
 
             reverse_iterator        operator++(int)
             {
-                return(reverse_iterator(this->_base.operator--));
+                return(reverse_iterator(this->_base.operator--()));
             }
 
             reverse_iterator&       operator--()
@@ -77,7 +77,7 @@ namespace ft
 
             reverse_iterator        operator--(int)
             {
-                return(reverse_iterator(this->_base.operator++));
+                return(reverse_iterator(this->_base.operator++()));
             }
 
 

@@ -19,7 +19,7 @@ SRCS=				main.cpp
 LIBRARYS	= 
 
 CLANG		=	clang++
-SANITIZER	=   -g3# -fsanitize=address
+SANITIZER	=   -g3 -fsanitize=address
 CPP_FLAGS	=	-Wextra -Wall -Werror -std=c++98 $(SANITIZER)
 CPP_IFLAGS	=	
 
