@@ -2,7 +2,6 @@
 #ifndef BINARY_TREE_HPP
 # define BINARY_TREE_HPP
 
-// REVIEW : remove if print() is no longer used
 #include <iostream>
 #include "reverse_iterator.hpp"
 
@@ -115,9 +114,9 @@ class binary_tree
 
                 reference								operator*(void) const
                 {
-                    //if (this->_value)
+                    if (this->_value)
                         return (*this->_value)();
-                   // throw std::out_of_range("cannot dereference on null data");
+                    throw std::out_of_range("cannot dereference on null data");
                 }
 
                 pointer									operator->(void) const
@@ -129,7 +128,6 @@ class binary_tree
 
                 bool									operator!=(const iterator &rhs) const
                 {
-                    //std::cout << this->_value << " != " << rhs._value << " : " << (this->_value != rhs._value) << std::endl;
                     return (this->_value != rhs._value);
                 }
                 
@@ -226,7 +224,6 @@ class binary_tree
 
         typedef ft::reverse_iterator<iterator>  reverse_iterator;
 
-        // REVIEW making nodes = _end by default instead of NULL ?    
         binary_tree()
         : _nodes(NULL), _end(new _tree_node<T>()), _start(this->_end)
         {
@@ -330,7 +327,6 @@ class binary_tree
 
         void     erase(const T& v)
         {
-            std::cout << "erase " << v << std::endl;
             _tree_node<T>   *elem = this->search(v);
             if (!elem || elem == this->_end || elem == this->_start)
                 return;
@@ -391,13 +387,6 @@ class binary_tree
                     new_start->set_left(this->_start);
                     this->_start->set_parent(new_start);
                 }
-                // REVIEW useless ? 
-                /*if (elem->right() == child)
-                    elem->set_right(NULL);
-                else
-                    elem->set_left(NULL);*/
-                // REVIEW END
-
                 if (elem->parent())
                 {
                     if (elem->parent()->right() == elem)
@@ -415,8 +404,6 @@ class binary_tree
                     child->set_parent(NULL);
                 delete elem;
             }
-
-
 
             /* Two child case */
             else
@@ -642,29 +629,3 @@ class binary_tree
 
 
 #endif // BINARY_TREE
-
-//++ behavior
-
-// leaf
-//  goto parent
-//  while (left) goto left
-
-
-// only R
-//  goto right
-//  while (left) goto left
-
-// only L
-// -> leaf
-
-// both childs
-//  goto right
-//  while (left) goto left
-
-//summary
-//if (!right) 
-//  goto parent
-//else
-//  goto right
-//
-//while (left) goto left
