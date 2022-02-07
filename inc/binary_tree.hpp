@@ -5,6 +5,11 @@
 #include <iostream>
 #include "reverse_iterator.hpp"
 
+
+/********************************************************************************/
+/*****************************    _tree_node    *********************************/
+/********************************************************************************/
+
 template<class T>
 struct _tree_node
 {
@@ -81,9 +86,18 @@ template<class T> bool operator<=(const _tree_node<T> &a, const _tree_node<T> &b
 template<class T> bool operator>=(const _tree_node<T> &a, const _tree_node<T> &b)
 { return (a() >= b()); }
 
-template<class T>
+
+/*********************************************************************************/
+/*****************************    binary_tree    *********************************/
+/*********************************************************************************/
+
+template<class T, class Allocator>
 class binary_tree
 {
+    public:
+        typedef _tree_node<T>   node_type;
+        typedef T               value_type;
+
     public:
         class iterator
         {
@@ -96,13 +110,13 @@ class binary_tree
 
                 iterator() : _value(NULL) {}
 
-                iterator(_tree_node<value_type>* v) : _value(v) {}
+                iterator(node_type* v) : _value(v) {}
 
                 iterator(const iterator &iterator) : _value(iterator._value) {}
 
-                value_type                              base() const
+                node_type*                              base() const
                 {
-                    return ((*this->_value)());
+                    return (this->_value);
                 }
 
                 iterator&                               operator=(const iterator &rhs)
@@ -122,8 +136,8 @@ class binary_tree
                 pointer									operator->(void) const
                 {
                     if (this->_value)
-                        return ((*this->_value)());
-                    return (NULL);
+                        return (&(*this->_value)());
+                    throw std::out_of_range("cannot dereference on null data");
                 }
 
                 bool									operator!=(const iterator &rhs) const
@@ -206,7 +220,7 @@ class binary_tree
                     reference original = (*this->_value)();
                     if (!this->_value->left())
                     { 
-                        while (this->_value && (*this->_value)() <= original) 
+                        while (this->_value && (*this->_value)() >= original) 
                             this->_value = this->_value->parent();
                     }
                     else
@@ -219,23 +233,175 @@ class binary_tree
                 }
 
             private:
-                _tree_node<value_type>*     _value;
+                node_type*     _value;
         };
 
-        typedef ft::reverse_iterator<iterator>  reverse_iterator;
+        class const_iterator
+        {
+            public:
+                typedef ptrdiff_t                           difference_type;
+                typedef T                                   value_type;
+                typedef value_type*                         pointer;
+                typedef value_type&                         reference;
+                typedef ft::bidirectional_iterator_tag      iterator_category;
 
+                const_iterator() : _value(NULL) {}
+
+                const_iterator(node_type* v) : _value(v) {}
+
+                const_iterator(const const_iterator &iterator) : _value(iterator._value) {}
+
+                node_type*                              base() const
+                {
+                    return (this->_value);
+                }
+
+                const_iterator&                         operator=(const const_iterator &rhs)
+                {
+                    if (this != &rhs)
+                        this->_value = rhs._value;
+                    return *this;
+                }
+
+                reference								operator*(void) const
+                {
+                    if (this->_value)
+                        return (*this->_value)();
+                    throw std::out_of_range("cannot dereference on null data");
+                }
+
+                pointer									operator->(void) const
+                {
+                    if (this->_value)
+                        return (&(*this->_value)());                 
+                    throw std::out_of_range("cannot dereference on null data");
+                }
+
+                bool									operator!=(const const_iterator &rhs) const
+                {
+                   // std::cout << this->_value << " != " << rhs._value << " = " << (this->_value != rhs._value) << std::endl;
+                    return (this->_value != rhs._value);
+                }
+                
+                bool									operator==(const const_iterator &rhs) const
+                {
+                    return (this->_value == rhs._value);
+                }
+
+                const_iterator&                               operator++(void)
+                {
+                    if (!this->_value)
+                        throw std::out_of_range("iterator is out of range");
+                    
+                    reference original = (*this->_value)();
+                    if (!this->_value->right())
+                    { 
+                        while (this->_value && (*this->_value)() <= original) 
+                            this->_value = this->_value->parent();
+                    }
+                    else
+                    {
+                        this->_value = this->_value->right();
+                        while (this->_value->left())
+                            this->_value = this->_value->left();
+                    }
+                    return *this;
+                }
+
+                const_iterator							    operator++(int)
+                {
+                    if (!this->_value)
+                        throw std::out_of_range("iterator is out of range");
+
+                    const_iterator copy(*this);
+                      
+                    reference original = (*this->_value)();
+                    if (!this->_value->right())
+                    { 
+                        while (this->_value && (*this->_value)() <= original) 
+                            this->_value = this->_value->parent();
+                    }
+                    else
+                    {
+                        this->_value = this->_value->right();
+                        while (this->_value->left())
+                            this->_value = this->_value->left();
+                    }
+                    return copy;
+                }
+
+                const_iterator&                               operator--(void)
+                {
+                    if (!this->_value)
+                        throw std::out_of_range("iterator is out of range");
+
+                    reference original = (*this->_value)();
+                    if (!this->_value->left())
+                    { 
+                        while (this->_value && (*this->_value)() >= original) 
+                            this->_value = this->_value->parent();
+                    }
+                    else
+                    {
+                        this->_value = this->_value->left();
+                        while (this->_value->right())
+                            this->_value = this->_value->right();
+                    }
+                    return *this;
+                }
+
+                const_iterator							    operator--(int)
+                {
+                    if (!this->_value)
+                        throw std::out_of_range("iterator is out of range");
+                 
+                    const_iterator copy(*this);
+
+                    reference original = (*this->_value)();
+                    if (!this->_value->left())
+                    { 
+                        while (this->_value && (*this->_value)() >= original) 
+                            this->_value = this->_value->parent();
+                    }
+                    else
+                    {
+                        this->_value = this->_value->left();
+                        while (this->_value->right())
+                            this->_value = this->_value->right();
+                    }
+                    return copy;
+                }
+
+            private:
+                node_type*     _value;
+        };
+
+        typedef ft::reverse_iterator<iterator>          reverse_iterator;
+        typedef ft::reverse_iterator<const_iterator>    const_reverse_iterator;
+
+    public:
         binary_tree()
-        : _nodes(NULL), _end(new _tree_node<T>()), _start(this->_end)
+        : _nodes(NULL), _end(new node_type()), _start(this->_end)
         {
             _nodes = NULL;
         }
 
         binary_tree(const binary_tree& x)
-        : _nodes(new _tree_node<T>(*x._nodes)), _end(new _tree_node<T>()), _start(new _tree_node<T>())
+        : _end(x._end), _start(x._start)
         {
-            _copy_tree(this->_nodes, x._nodes);
-            highest_bound()->set_right(this->_end);
-            lowest_bound()->set_left(this->_start);
+            if (x._start != x._end)
+            {
+                this->_nodes = new node_type(*x._nodes);
+                _copy_tree(this->_nodes, x._nodes);
+                node_type *new_end = new node_type();
+                node_type *new_start = new node_type();
+                this->highest_bound()->set_right(new_end);
+                this->_end = new_end;
+                this->lowest_bound()->set_left(new_start);
+                this->_start = new_start;
+            }
+            else
+                binary_tree();
         }
 
         ~binary_tree()
@@ -244,39 +410,61 @@ class binary_tree
         }
 
 
-        iterator    begin()
+        iterator                begin()
         {
             if (!this->_nodes)
                 return (iterator(this->_end));
             return (iterator(lowest_bound()));
         }
 
-        iterator    end()
+        const_iterator          begin() const
+        {
+            if (!this->_nodes)
+                return (const_iterator(this->_end));
+            return (const_iterator(lowest_bound()));
+        }
+
+        iterator                end()
         {
             return (iterator(this->_end));
         }
 
-        reverse_iterator    rbegin()
+        const_iterator          end() const
+        {
+            return (const_iterator(this->_end));
+        }
+
+        reverse_iterator        rbegin()
         {
             if (!this->_nodes)
                 return (reverse_iterator(this->_start));
             return (reverse_iterator(highest_bound()));
         }
 
-        reverse_iterator    rend()
+        const_reverse_iterator  rbegin() const
+        {
+            if (!this->_nodes)
+                return (const_reverse_iterator(this->_start));
+            return (const_reverse_iterator(highest_bound()));
+        }
+
+        reverse_iterator        rend()
         {
             return (reverse_iterator(this->_start));
         }
 
-
-
-        void    insert(const T& v)
+        const_reverse_iterator  rend() const
         {
-            _tree_node<T>   *buf = this->search(v);
-            if (buf && buf != this->_end && buf != this->_start && this->_nodes)
-                return ;
+            return (const_reverse_iterator(this->_start));
+        }
 
-            buf = this->_nodes;
+
+        /* Note: inserting in this binary tree is insecure if v is already
+           contained in the tree, use binary_tree::search before this to 
+           avoid unknown behaviour                                         */
+        node_type    *insert(const T& v)
+        {
+            node_type   *buf = this->_nodes;
             while (buf != NULL)
             {
                 if (v <= (*buf)())
@@ -284,14 +472,14 @@ class binary_tree
                     bool e = (buf->left() == this->_start);
                     if (!buf->left() || e)
                     {
-                        buf->set_left(new _tree_node<T>(v));
+                        buf->set_left(new node_type(v));
                         buf->left()->set_parent(buf);
                         if (e)
                         {
                             buf->left()->set_left(this->_start);
                             this->_start->set_parent(buf->right());
                         }
-                        return ;
+                        return buf->left();
                     }
                     buf = buf->left();
                 }
@@ -300,39 +488,45 @@ class binary_tree
                     bool e = (buf->right() == this->_end);
                     if (!buf->right() || e)
                     {
-                        buf->set_right(new _tree_node<T>(v));
+                        buf->set_right(new node_type(v));
                         buf->right()->set_parent(buf);
                         if (e)
                         {
                             buf->right()->set_right(this->_end);
                             this->_end->set_parent(buf->right());
                         }
-                        return ;
+                        return buf->right();
                     }
                     buf = buf->right();
                 }
             }
             if (buf == NULL) 
             {
-                this->_nodes = new _tree_node<T>(v);
+                this->_nodes = new node_type(v);
                 this->_nodes->set_right(this->_end);
                 if (this->_start == this->_end)
-                    this->_start = new _tree_node<T>();
+                    this->_start = new node_type();
                 this->_nodes->set_left(this->_start);
             }
-            return ;
+            return this->_nodes;
+        }
+
+
+        bool    empty()
+        {
+            return (!this->_nodes || this->_start == this->_end);
         }
 
 
 
         void     erase(const T& v)
         {
-            _tree_node<T>   *elem = this->search(v);
+            node_type   *elem = this->search(v);
             if (!elem || elem == this->_end || elem == this->_start)
                 return;
 
-            bool            end = (elem->right() == this->_end);
-            bool            start = (elem->left() == this->_start);
+            bool end = (elem->right() == this->_end);
+            bool start = (elem->left() == this->_start);
 
             /* No children case */
             if ((!elem->left() || start) && (!elem->right() || end))
@@ -370,20 +564,20 @@ class binary_tree
             /* One child case */
             else if (((!elem->left() || start) && (elem->right() && !end)) || ((elem->left() && !start) && (!elem->right() || end)))
             {
-                _tree_node<T> *child = (elem->left() != NULL && elem->left() != this->_start) ? elem->left() : elem->right();
+                node_type *child = (elem->left() != NULL && elem->left() != this->_start) ? elem->left() : elem->right();
 
                 if (elem == this->_nodes)
                     this->_nodes = child;
                 
                 if (end)
                 {
-                    _tree_node<T>   *new_end = highest_bound(child);
+                    node_type   *new_end = highest_bound(child);
                     new_end->set_right(this->_end);
                     this->_end->set_parent(new_end);
                 }
                 else if (start)
                 {
-                    _tree_node<T>   *new_start = lowest_bound(child);
+                    node_type   *new_start = lowest_bound(child);
                     new_start->set_left(this->_start);
                     this->_start->set_parent(new_start);
                 }
@@ -408,7 +602,7 @@ class binary_tree
             /* Two child case */
             else
             {
-                _tree_node<T> *successor = upper_bound(v);
+                node_type *successor = upper_bound(v);
                 T  s_value = T((*successor)());
                 this->erase((*successor)());
                 elem->set_value(s_value);
@@ -417,9 +611,9 @@ class binary_tree
 
 
 
-        _tree_node<T>   *search(const T& v)
+        node_type   *search(const T& v) const
         {
-            _tree_node<T>   *buf = this->_nodes;
+            node_type   *buf = this->_nodes;
 
             while (buf)
             {
@@ -441,9 +635,9 @@ class binary_tree
             return (NULL);
         }
 
-        _tree_node<T>  *lowest_bound()
+        node_type  *lowest_bound() const
         {
-            _tree_node<T>   *buf = this->_nodes;
+            node_type   *buf = this->_nodes;
 
             if (!buf)
                 return (NULL);
@@ -454,9 +648,9 @@ class binary_tree
             return (buf);
         }
 
-        _tree_node<T>   *highest_bound()
+        node_type   *highest_bound() const
         {
-            _tree_node<T>   *buf = this->_nodes;
+            node_type   *buf = this->_nodes;
 
             if (!buf)
                 return (NULL);
@@ -468,7 +662,7 @@ class binary_tree
         }
 
 
-        _tree_node<T>  *lowest_bound(_tree_node<T> *buf)
+        node_type  *lowest_bound(node_type* buf) const
         {
             if (!buf)
                 return (NULL);
@@ -479,7 +673,7 @@ class binary_tree
             return (buf);
         }
 
-        _tree_node<T>   *highest_bound(_tree_node<T> *buf )
+        node_type   *highest_bound(node_type* buf) const
         {
             if (!buf)
                 return (NULL);
@@ -491,9 +685,9 @@ class binary_tree
         }
 
 
-        _tree_node<T>   *lower_bound(T v)
+        node_type   *lower_bound(const T& v) const
         {
-            _tree_node<T>   *buf = this->_nodes;
+            node_type   *buf = this->_nodes;
 
             while (buf)
             {
@@ -513,9 +707,9 @@ class binary_tree
             return (buf);
         }
 
-        _tree_node<T>   *upper_bound(T v)
+        node_type   *upper_bound(const T& v) const
         {
-            _tree_node<T>   *buf = this->_nodes;
+            node_type   *buf = this->_nodes;
 
             while (buf)
             {
@@ -540,22 +734,38 @@ class binary_tree
 
 
     private:
-        void    _copy_tree(_tree_node<T>* buf, const _tree_node<T> *src)
+        void    _copy_tree(node_type *const buf, const node_type *const src)
         {
-            if (src->left())
+            if (src && src->left())
             {
-                buf->set_left(new _tree_node<T>(*src->left()));
-                _copy_tree(buf->left(), src->left());
+                if (src->left() == this->_start)
+                {
+                    buf->set_left(NULL);
+                }
+                else
+                {
+                    buf->set_left(new node_type(*src->left()));
+                    buf->left()->set_parent(buf);
+                    _copy_tree(buf->left(), src->left());
+                }
             }
 
-            if (src->right())
+            if (src && src->right())
             {
-                buf->set_right(new _tree_node<T>(*src->right()));
-                _copy_tree(buf->right(), src->right());
+                if (src->right() == this->_end)
+                {
+                    buf->set_right(NULL);
+                }
+                else
+                {
+                    buf->set_right(new node_type(*src->right()));
+                    buf->right()->set_parent(buf);
+                    _copy_tree(buf->right(), src->right());
+                }
             }
         }
 
-        void    _delete_tree(_tree_node<T>* tree)
+        void    _delete_tree(node_type* tree)
         {
             if (!tree)
             {
@@ -573,58 +783,57 @@ class binary_tree
             delete(tree);
         }
 
-        void    _print_tree(_tree_node<T>  *n, int off = 0)
+        void    _print_tree(const node_type *const n, const int off = 0) const
         {
-            static const int step = 5;
+            static const int STEP = 5;
 
             int i = 0;
             while (i < off)
             {
-                std::cout  << std::string(step - 1, (i == off - step) ? '-' : ' ') << ((i == off - step) ? "|" : "|");
-                i += step;
+                if (i == off - STEP)
+                    std::cout  << "────·";
+                else if (i == off - STEP*2)
+                    std::cout  << "    ├";
+                else
+                    std::cout  << "    │";
+                i += STEP;
             }
-
             if (n)
             {
                 if (n == this->_end)
-                {
                     std::cout << "\033[38;2;150;100;100mEND\033[0m/" << std::endl;
-                    return ;
-                }
                 else if (n == this->_start)
-                {
                     std::cout << "\033[38;2;140;170;105mSTART\033[0m/" << std::endl;
-                    return ;
-                }
                 else
-                    std::cout << "\033[1;32m" << (*n)() << "\033[0m/" << std::endl;
+                    std::cout << "\033[1;32m" << (*n)().first << "\033[0m/" << std::endl;
+                if (n == this->_start || n == this->_end)
+                    return ;
             }
             else
                 std::cout << "\033[38;2;100;100;120mNIL\033[0m/" << std::endl;
-
             if (n)
             {
-                _print_tree(n->right(), off + step);
+                _print_tree(n->right(), off + STEP);
                 if (n->right() || n->left())
                 {
                     i = 0;
                     while (i < off)
                     {
-                        std::cout  << std::string(step - 1, ' ') << ((i == off - step) ? "|" : "|");
-                        i += step;
+                        std::cout  << std::string(STEP - 1, ' ') << "│";
+                        i += STEP;
                     }
                     std::cout << std::endl;
                 }
             }
             if (n)
-                _print_tree(n->left(), off + step);
+                _print_tree(n->left(), off + STEP);
         }
 
     
     private:
-        _tree_node<T>   *_nodes;
-        _tree_node<T>   *_end;
-        _tree_node<T>   *_start;
+        node_type   *_nodes;
+        node_type   *_end;
+        node_type   *_start;
 };
 
 

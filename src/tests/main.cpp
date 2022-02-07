@@ -17,130 +17,58 @@ namespace LIB = ft;
 #define UNIT_TEST(test_name)    max_tests++; std::cout << " . testing " << test_name << std::endl;
 #define UNIT_ERROR(error)       errors++; std::cout << "   \033[1;31mERROR\033[0m: " << error << std::endl << std::endl;
 
-class SomeClass
-{
-    public:
-        SomeClass(int x) : _value(x) { }
-    
-        int     getValue() const { return this->_value; }
-        void    setValue(int v) { this->_value = v; }
-
-    private:
-        int _value;
-};
-
-#include <cstdlib>
-#include <random>
-
 int main()
 {
-    std::cout << "* * *    \033[1;32mMAP\033[0m   * * *" << std::endl << std::endl;
+    LIB::map<int, std::string>  m = LIB::map<int, std::string>();
 
+    m.insert(LIB::make_pair(1, std::string("hello00")));
+    m.insert(LIB::make_pair(7, std::string("hello01")));
+    m.insert(LIB::make_pair(3, std::string("hello02")));
+    m.insert(LIB::make_pair(10, std::string("hello03")));
+    m.insert(LIB::make_pair(8, std::string("hello04")));
+    m.insert(LIB::make_pair(2, std::string("hello05")));
+    m.insert(LIB::make_pair(5, std::string("hello06")));
+    m.insert(LIB::make_pair(9, std::string("hello07")));
+    m.insert(LIB::make_pair(4, std::string("hello08")));
+    m.insert(LIB::make_pair(6, std::string("hello09")));
+
+    for (LIB::map<int, std::string>::iterator it = m.begin(); it != m.end(); ++it)
     {
-      /*  LIB::map<int, std::string>    map = LIB::map<int, std::string>();
-        map.insert(LIB::make_pair(1, "hey"));*/
+        std::cout << "++iterator: " << it->first << " = " << it->second << std::endl;
+    }
+    for (LIB::map<int, std::string>::iterator it = m.begin(); it != m.end(); it++)
+    {
+        std::cout << "iterator++: " << it->first << " = " << it->second << std::endl;
+    }
+    for (LIB::map<int, std::string>::reverse_iterator it = m.rbegin(); it != m.rend(); ++it)
+    {
+        std::cout << "++reverse_iterator: " << it->first << " = " << it->second << std::endl;
+    }
+    for (LIB::map<int, std::string>::reverse_iterator it = m.rbegin(); it != m.rend(); it++)
+    {
+        std::cout << "reverse_iterator++: " << it->first << " = " << it->second << std::endl;
+    }
+    
 
-        binary_tree<int> bt = binary_tree<int>();
 
-        bt.insert(3);
-        bt.insert(4);
-        bt.insert(9);
-        bt.insert(1);
-        bt.insert(5);
-        bt.insert(7);
-        bt.insert(10);
-        bt.insert(12);
-        bt.insert(2);
-        bt.insert(6);
-        bt.insert(8);
-        bt.insert(11);
+    
+    const LIB::map<int, std::string> map2 = LIB::map<int, std::string>(m);
 
-        std::cout << "printing tree: " << std::endl;
-        bt.print();
-        
-        /*
-        bt.erase(12);
-        bt.erase(11);
-        bt.erase(10);
-        bt.erase(5);
-        bt.erase(4);
-        bt.erase(1);*/
-        bt.erase(2);
-        bt.erase(3);
-        bt.erase(9);
-        bt.erase(8);
-        bt.erase(7);
-        bt.erase(6);
-        
-
-        std::cout << "printing tree: " << std::endl;
-        bt.print();
-        
-
-/*
-        std::map<int, int> m = std::map<int, int>();
-        m.insert(std::make_pair(3, 0));
-        m.insert(std::make_pair(4, 0));
-        m.insert(std::make_pair(9, 0));
-        m.insert(std::make_pair(1, 0));
-        m.insert(std::make_pair(5, 0));
-        m.insert(std::make_pair(7, 0));
-        m.insert(std::make_pair(10, 0));
-        m.insert(std::make_pair(12, 0));
-        m.insert(std::make_pair(2, 0));
-        m.insert(std::make_pair(6, 0));
-        m.insert(std::make_pair(8, 0));
-        m.insert(std::make_pair(11, 0));
-        int i = 0;
-        for (std::map<int, int>::reverse_iterator it = m.rbegin(); it != m.rend(); it++)
-        {
-            std::cout << "value: " << it->first << std::endl;
-
-            if (i++ > 15)
-            {
-                std::cout << "..." << std::endl;
-                return 0;
-            }
-        }
-*/
-
-        int i = 0;
-        for (binary_tree<int>::iterator it = bt.begin(); it != bt.end(); ++it)
-        {
-            std::cout << "value: " << *it << std::endl;
-
-            if (i++ > 15)
-            {
-                std::cout << "..." << std::endl;
-                return 0;
-            }
-        }
-       // std::cout << "elem: " << *bt.get_elem(-9) << std::endl;
-       // std::cout << "elem: " << *bt.get_elem(389) << std::endl;
-        /*
-        {
-            UNIT_START("map member functions")
-            
-            UNIT_END
-        }
-
-        {
-            UNIT_START("map iterators")
-            
-            UNIT_END
-        }
-
-        {
-            UNIT_START("map operators")
-        
-            UNIT_END
-        }
-
-        {
-            UNIT_START("map non member functions")
-        
-            UNIT_END
-        }*/
+    for (LIB::map<int, std::string>::const_iterator it = map2.begin(); it != map2.end(); ++it)
+    {
+        std::cout << "++const_iterator: " << it->first << " = " << it->second << std::endl;
+    }
+    for (LIB::map<int, std::string>::const_iterator it = map2.begin(); it != map2.end(); it++)
+    {
+        std::cout << "const_iterator++: " << it->first << " = " << it->second << std::endl;
+    }
+    for (LIB::map<int, std::string>::const_reverse_iterator it = map2.rbegin(); it != map2.rend(); ++it)
+    {
+        std::cout << "++const_reverse_iterator: " << it->first << " = " << it->second << std::endl;
+    }
+    for (LIB::map<int, std::string>::const_reverse_iterator it = map2.rbegin(); it != map2.rend(); it++)
+    {
+        std::cout << "const_reverse_iterator++: " << it->first << " = " << it->second << std::endl;
     }
     return (0);
 }

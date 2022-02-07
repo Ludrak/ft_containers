@@ -187,6 +187,9 @@ namespace ft
             typedef typename allocator_type::const_pointer   const_pointer;
             typedef typename allocator_type::size_type       size_type;
             typedef typename allocator_type::difference_type difference_type;
+
+            typedef binary_tree<value_type, allocator_type>  tree_type;
+            typedef _tree_node<value_type>                   node_type;
             
             class value_compare : public binary_function<value_type, value_type, bool>
             {
@@ -204,281 +207,10 @@ namespace ft
                         { return comp(x.first, y.first); }
             };
 
-
-
-            /*  ITERATORS
-             *  =========
-             */
-            class iterator
-            {
-                public:
-                    typedef ptrdiff_t                           difference_type;
-					typedef map::value_type                     value_type;
-					typedef value_type*                         pointer;
-					typedef value_type&                         reference;
-                    ft::random_access_iterator_tag              iterator_category;
-                
-                protected:
-                    value_type                                  _value;
-
-                public:
-					iterator() : _value(NULL) { }
-
-					iterator(value_type* val) : _value(val) { }
-					
-                    iterator(const iterator& src) : _value(src._value) { }
-
-					~iterator() {}
-
-                    value_type                          base() const
-                    {
-                        return (this->_value);
-                    }
-
-					iterator							&operator=(const iterator &rhs)
-					{
-						if ( this != &rhs)
-							this->_value = rhs._value;
-
-						return *this;
-					}
-
-					reference							operator*(void) const
-					{
-						return *(this->_value);
-					}
-
-					pointer								operator->(void) const
-					{
-						return (this->_value);
-					}
-					
-					iterator::difference_type			operator+(const iterator & rhs) const
-					{
-						return (this->_value + rhs._value);
-					}
-					
-					iterator::difference_type			operator-(const iterator & rhs) const
-					{
-						return (this->_value - rhs._value);
-					}
-					
-					iterator							operator+(difference_type n) const
-					{
-						return iterator(this->_value + n);
-					}
-					
-					iterator							operator-(difference_type n) const
-					{
-						return iterator(this->_value - n);
-					}
-					
-					iterator							&operator+=(difference_type n)
-					{
-						this->_value += n;
-						return *this;
-					}
-
-					iterator							&operator-=(difference_type n)
-					{
-						this->_value -= n;
-						return *this;
-					}
-
-					bool								operator!=(const iterator &rhs) const
-                    {
-						return (this->_value != rhs._value);
-					}
-
-					bool								operator==(const iterator &rhs) const
-                    {
-						return (this->_value == rhs._value);
-					}
-					
-					iterator			&operator++(void)
-					{
-						++this->_value;
-						return *this;
-					}
-
-					iterator			operator++(int)
-					{
-						iterator copy(*this);
-						++this->_value;
-						return copy;
-					}
-
-					iterator			&operator--(void)
-					{
-						--this->_value;
-						return *this;
-					}
-
-					iterator			operator--(int)
-					{
-						iterator copy(*this);
-						--this->_value;
-						return copy;
-					}
-					bool				operator<(const iterator& rhs) const
-					{
-						return (this->_value < rhs._value);
-					}
-					
-					bool				operator>(const iterator& rhs) const
-					{
-						return (this->_value > rhs._value);
-					}
-					
-					bool				operator<=(const iterator& rhs) const
-					{
-						return (this->_value <= rhs._value);
-					}
-					
-					bool				operator>=(const iterator& rhs) const
-					{
-						return (this->_value >= rhs._value);
-					}
-            };
-
-            class const_iterator
-            {
-                public:
-                    typedef ptrdiff_t                           difference_type;
-					typedef map::value_type                     value_type;
-					typedef value_type*                         pointer;
-					typedef value_type&                         reference;
-                    ft::random_access_iterator_tag              iterator_category;
-
-
-                protected:
-					value_type 		*_value;
-					
-				public:
-					const_iterator() : _value(NULL) {}
-
-					const_iterator(value_type* val) : _value(val) { }
-					
-					const_iterator(const const_iterator& src) : _value(src._value) { }
-
-					~const_iterator() { }
-
-                    value_type                              base() const
-                    {
-                        return (this->_value);
-                    }
-
-					const_iterator&                         operator=(const const_iterator &rhs)
-					{
-						if ( this != &rhs)
-							this->_value = rhs._value;
-					
-						return *this;
-					}
-
-					reference								operator*(void) const
-					{
-                        if (this->_value)
-						    return *(this->_value);
-                        throw std::out_of_range("cannot dereference on null data");
-					}
-
-					pointer									operator->(void) const
-					{
-						return (this->_value);
-					}
-					
-					const_iterator::difference_type			operator+(const const_iterator &rhs) const
-					{
-						return (this->_value + rhs._value);
-					}
-					
-					const_iterator::difference_type			operator-(const const_iterator &rhs) const
-					{
-						return (this->_value - rhs._value);
-					}
-					
-					const_iterator							operator+(difference_type n) const
-					{
-						return const_iterator(this->_value + n);
-					}
-					
-					const_iterator							operator-(difference_type n) const
-					{
-						return const_iterator(this->_value - n);
-					}
-					
-					const_iterator&                         operator+=(difference_type n)
-					{
-						this->_value += n;
-						return *this;
-					}
-
-					const_iterator&                         operator-=(difference_type n)
-					{
-						this->_value -= n;
-						return *this;
-					}
-
-					bool									operator!=(const const_iterator &rhs) const
-                    {
-						return (this->_value != rhs._value);
-					}
-					
-					bool									operator==(const const_iterator &rhs) const
-                    {
-						return (this->_value == rhs._value);
-					}
-					const_iterator&                         operator++(void)
-					{
-						++this->_value;
-						return *this;
-					}
-
-					const_iterator							operator++(int)
-					{
-						const_iterator copy(*this);
-						++this->_value;
-						return copy;
-					}
-
-					const_iterator&                         operator--(void)
-					{
-						--this->_value;
-						return *this;
-					}
-
-					const_iterator							operator--(int)
-					{
-						const_iterator cpy(*this);
-						--this->_value;
-						return cpy;
-					}
-
-					bool									operator<(const const_iterator& rhs) const
-					{
-						return (this->_value < rhs._value);
-					}
-					
-					bool									operator>(const const_iterator& rhs) const
-					{
-						return (this->_value > rhs._value);
-					}
-					
-					bool									operator<=(const const_iterator& rhs) const
-					{
-						return (this->_value <= rhs._value);
-					}
-					
-					bool									operator>=(const const_iterator& rhs) const
-					{
-						return (this->_value >= rhs._value);
-					}
-            };
-
-            typedef ft::reverse_iterator<iterator>           reverse_iterator;
-            typedef ft::reverse_iterator<const_iterator>     const_reverse_iterator;
-
+            typedef typename tree_type::iterator                iterator;
+            typedef typename tree_type::const_iterator          const_iterator;
+            typedef typename tree_type::reverse_iterator        reverse_iterator;
+            typedef typename tree_type::const_reverse_iterator  const_reverse_iterator;
 
 
             /*  CONSTRUCTORS / DESTRUCTORS
@@ -487,7 +219,7 @@ namespace ft
 
             explicit map (const key_compare& comp = key_compare(), 
                                                         const allocator_type& alloc = allocator_type())
-            : _base(), _alloc(alloc), _key_compare(comp)
+            : _base(), _alloc(alloc), _key_compare(comp), _value_compare(comp)
             { }
 
             template <class InputIterator>
@@ -495,9 +227,12 @@ namespace ft
                                                         const allocator_type& alloc = allocator_type());
             // TODO when insert is done
 
-            map (const map& x);
+            map (const map& x)
+            : _base(tree_type(x._base)), _alloc(x._alloc), _key_compare(x._key_compare), _value_compare(x._value_compare)
+            { }
 
-            ~map();
+            ~map()
+            { }
 
 
 
@@ -508,46 +243,46 @@ namespace ft
             //begin
             iterator                                begin()
             {
-                return (iterator(_base.lowest_bound()));
+                return (this->_base.begin());
             }
 
             const_iterator                          begin() const
             {
-                return (const_iterator(_base.lowest_bound()));
+                return (this->_base.begin());
             }
 
 
             //end
             iterator                                end()
             {
-                return (iterator(_base.highest_bound()));
+                return (this->_base.end());
             }
 
             const_iterator                          end() const
             {
-                return (const_iterator(_base.highest_bound()));
+                return (this->_base.end());
             }
 
             //rbegin
             reverse_iterator                        rbegin()
             {
-                return (reverse_iterator(_base.highest_bound()));
+                return (this->_base.rbegin());
             }
 
             const_reverse_iterator                  rbegin() const
             {
-                return (const_reverse_iterator(_base.highest_bound()));
+                return (this->_base.rbegin());
             }
 
             //rend
             reverse_iterator                        rend()
             {
-                return (reverse_iterator(_base.lowest_bound()));
+                return (this->_base.rend());
             }
 
             const_reverse_iterator                  rend() const
             {
-                return (const_reverse_iterator(_base.lowest_bound()));
+                return (this->_base.rend());
             }
 
             //upper_bound
@@ -582,60 +317,103 @@ namespace ft
             size_type                               count(const key_type& k) const;
 
             //empty
-            bool                                    empty() const;
+            bool                                    empty() const
+            {
+                return (this->_base.empty() );
+            }
 
             //equal_range
             ft::pair<const_iterator,const_iterator> equal_range(const key_type& k) const;
             ft::pair<iterator,iterator>             equal_range(const key_type& k);
 
             //erase
-            void                                    erase(iterator position);
+            void                                    erase(iterator position)
+            {
+                this->_base.erase(*position);
+            }
+
             size_type                               erase(const key_type& k)
             {
-                _base.erase(k);
+                this->_base.erase(ft::make_pair(k, mapped_type()));
             }
 
             void                                    erase(iterator first, iterator last);
             
             //find
-            iterator                                find(const key_type& k);
-            const_iterator                          find(const key_type& k) const;
+            iterator                                find(const key_type& k)
+            {
+                tree_type* n = this->_base.search(ft::make_pair(k, value_type()));
+                if (n == this->_base.end())
+                    return this->end();
+                return (iterator((*n)()));
+            }
+
+            const_iterator                          find(const key_type& k) const
+            {
+                tree_type* n = this->_base.search(ft::make_pair(k, value_type()));
+                if (n == this->_base.end())
+                    return this->end();
+                return (const_iterator((*n)()));
+            }
 
             //get_allocator
-            allocator_type                          get_allocator() const;
+            allocator_type                          get_allocator() const
+            {
+                return (this->_alloc);
+            }
 
             //insert
-            ft::pair<iterator,bool>                 insert(const value_type& val)
+            ft::pair<iterator,bool>                insert(const value_type& v)
             {
-                _tree_node<value_type>  *occurence;
-                if ((occurence = _base.search(val)) != _base.end())
-                    return (ft::make_pair(iterator((*occurence)()), false));
-                _base.insert(val);
-                return (ft::make_pair(iterator(val), false));
+                node_type* buf = this->_base.search(v);
+                if (buf && !this->_base.empty() && buf != this->_base.end().base()
+                                                && buf != this->_base.begin().base())
+                    return ft::pair<iterator, bool>(iterator(buf), false);
+ 
+                return (ft::pair<iterator, bool>(iterator(this->_base.insert(v)), true));
             }
 
             iterator                                insert(iterator position, const value_type& val);
+
             template <class InputIterator>
             void                                    insert(InputIterator first, InputIterator last);
             
             //key_comp
-            key_compare                             key_comp() const;
+            key_compare                             key_comp() const
+            {
+                return (this->_key_compare);
+            }
 
             //max_size
-            size_type                               max_size() const;
+            size_type                               max_size() const
+            {
+                //TODO find max_size of map
+            }
 
             //size
-            size_type                               size() const;
+            size_type                               size() const
+            {
+                // TODO find size on insertions / deletions
+            }
 
             //swap
-            void                                    swap(map& x);
+            void                                    swap(map& x)
+            {
+                // TODO see if this works... otherwise try clever method  
+                map buf(x);
+                x = *this;
+                *this = buf;
+            }
 
             //value_comp
-            value_compare                           value_comp() const;
+            value_compare                           value_comp() const
+            {
+                return (this->_value_compare);
+            }
 
 
 
-            /*  OPERATORS
+            /*  TODO OPERATORS 
              *  =========
              */
             map                     operator= (const map& x);
@@ -673,19 +451,10 @@ namespace ft
             friend void                             swap (map<Key, T, Compare, Allocator>& x,
                                                             map<Key, T, Compare, Allocator>& y);
         private:
-            binary_tree<value_type>   _base;
+            tree_type                 _base;
             allocator_type            _alloc;
             key_compare               _key_compare;
-
- /*         typedef _VSTD::__value_type<key_type, mapped_type>                  __value_type;
-            typedef __map_value_compare<key_type, __value_type, key_compare>    __vc;
-
-            typedef typename __rebind_alloc_helper<allocator_traits<allocator_type>, __value_type>::type
-                                                                                __allocator_type;
-            typedef typename __base::__node_traits                              __node_traits;
-            typedef allocator_traits<allocator_type>                            __alloc_traits;
-    */
-
+            value_compare             _value_compare;
     };
 }
 

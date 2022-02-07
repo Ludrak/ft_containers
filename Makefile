@@ -46,32 +46,8 @@ CPP_IFLAGS	+=	$(addprefix -I,$(INC_DIR)) $(addprefix -I,$(shell echo $(HEADER_FI
 CPP_LFLAG	+=	$(addprefix -L,$(addprefix $(LIB_DIR), $(LIBRARYS)))
 
 #   Main rule
-all: select
+all: check_headers check_sources $(NAME)
 	@echo "$(PREFIX_PROJECT)$(PREFIX_INFO) done"
-
-os:
-ifeq ($(OSDETECT),WIN32)
-	@echo "$(PREFIX_PROJECT)$(PREFIX_ERROR) This project cannot compile yet on windows"
-	@exit 0
-endif
-ifeq ($(OSDETECT), OSX)
-	@echo "$(PREFIX_PROJECT)$(PREFIX_INFO) Compilation target: OSX"
-endif
-ifeq ($(OSDETECT), LINUX)
-	@echo "$(PREFIX_PROJECT)$(PREFIX_INFO) Compilation target: Linux"
-endif
-
-select: CPP_FLAGS += -DSELECT
-select: check_headers check_sources os $(NAME)
-# select: clean $(NAME)
-
-kqueue: CPP_FLAGS += -DKQUEUE
-kqueue: clean check_headers check_sources os $(NAME)
-# kqueue: $(NAME)
-
-poll: CPP_FLAGS += -DPOLL
-poll: clean check_headers check_sources os $(NAME)
-# poll: $(NAME)
 
 #	check_sources :
 #	simple bash script to check duplicates sources files 
