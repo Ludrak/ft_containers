@@ -32,6 +32,9 @@ int main()
     m.insert(LIB::make_pair(4, std::string("hello08")));
     m.insert(LIB::make_pair(6, std::string("hello09")));
 
+    ft::pair<LIB::map<int, std::string>::iterator, bool> p = m.insert(LIB::make_pair(6, std::string("hello09")));
+    std::cout << "double insert (should be 0) : " << p.second << std::endl;
+
     for (LIB::map<int, std::string>::iterator it = m.begin(); it != m.end(); ++it)
     {
         std::cout << "++iterator: " << it->first << " = " << it->second << std::endl;

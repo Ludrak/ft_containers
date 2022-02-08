@@ -342,18 +342,18 @@ namespace ft
             //find
             iterator                                find(const key_type& k)
             {
-                tree_type* n = this->_base.search(ft::make_pair(k, value_type()));
-                if (n == this->_base.end())
+                node_type* buf = this->_base.search(ft::make_pair(k, mapped_type()));
+                if (!buf || buf == this->_base.end().base() || buf == this->_base.begin().base())
                     return this->end();
-                return (iterator((*n)()));
+                return (iterator(buf));
             }
 
             const_iterator                          find(const key_type& k) const
             {
-                tree_type* n = this->_base.search(ft::make_pair(k, value_type()));
-                if (n == this->_base.end())
+                node_type* buf = this->_base.search(ft::make_pair(k, mapped_type()));
+                if (!buf || buf == this->_base.end().base() || buf != this->_base.begin().base())
                     return this->end();
-                return (const_iterator((*n)()));
+                return (const_iterator(buf));
             }
 
             //get_allocator
@@ -365,12 +365,11 @@ namespace ft
             //insert
             ft::pair<iterator,bool>                insert(const value_type& v)
             {
-                node_type* buf = this->_base.search(v);
-                if (buf && !this->_base.empty() && buf != this->_base.end().base()
-                                                && buf != this->_base.begin().base())
-                    return ft::pair<iterator, bool>(iterator(buf), false);
- 
-                return (ft::pair<iterator, bool>(iterator(this->_base.insert(v)), true));
+                iterator i = this->find(v.first);
+                if (i != this->end())
+                    return ft::make_pair(iterator(i), false);
+                std::cout << "inserting " << v.first << std::endl;
+                return (ft::make_pair(iterator(this->_base.insert(v)), true));
             }
 
             iterator                                insert(iterator position, const value_type& val);
@@ -387,7 +386,7 @@ namespace ft
             //max_size
             size_type                               max_size() const
             {
-                //TODO find max_size of map
+                return (this->_alloc.max_size());
             }
 
             //size
