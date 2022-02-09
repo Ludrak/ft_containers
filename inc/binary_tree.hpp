@@ -381,13 +381,14 @@ class binary_tree
 
     public:
         binary_tree()
-        : _nodes(NULL), _end(new node_type()), _start(this->_end)
+        : _nodes(NULL), _size(0)
         {
-            _nodes = NULL;
+            this->_end = new node_type();
+            this->_start = this->_end;
         }
 
         binary_tree(const binary_tree& x)
-        : _end(x._end), _start(x._start)
+        : _end(x._end), _start(x._start), _size(x._size)
         {
             if (x._start != x._end)
             {
@@ -406,7 +407,15 @@ class binary_tree
 
         ~binary_tree()
         {
-            _delete_tree(this->_nodes);
+            if (this->_nodes)
+                _delete_tree(this->_nodes);
+            if (this->_end)
+            {
+                //std::cout << "delete end binary_tree " << this->_end << " (on obj " << this << ")" << std::endl;
+                /* TODO SEE FOR THIS SHIT*/
+                delete this->_end;
+                this->_end = NULL;
+            }
         }
 
 
@@ -458,13 +467,25 @@ class binary_tree
             return (const_reverse_iterator(this->_start));
         }
 
+        node_type               *start() const
+        {
+            return (this->_start);
+        }
+
 
         /* Note: inserting in this binary tree is insecure if v is already
            contained in the tree, use binary_tree::search before this to 
            avoid unknown behaviour                                         */
-        node_type    *insert(const T& v)
+        node_type               *insert(const T& v)
         {
-            node_type   *buf = this->_nodes;
+            return (insert (this->_nodes, v));
+        }
+
+        /* Note: inserting in this binary tree is insecure if v is already
+           contained in the tree, use binary_tree::search before this to 
+           avoid unknown behaviour                                         */
+        node_type    *insert(node_type *buf, const T& v)
+        {
             while (buf != NULL)
             {
                 if (v <= (*buf)())
@@ -479,6 +500,7 @@ class binary_tree
                             buf->left()->set_left(this->_start);
                             this->_start->set_parent(buf->right());
                         }
+                        this->_size++;
                         return buf->left();
                     }
                     buf = buf->left();
@@ -495,6 +517,7 @@ class binary_tree
                             buf->right()->set_right(this->_end);
                             this->_end->set_parent(buf->right());
                         }
+                        this->_size++;
                         return buf->right();
                     }
                     buf = buf->right();
@@ -507,6 +530,7 @@ class binary_tree
                 if (this->_start == this->_end)
                     this->_start = new node_type();
                 this->_nodes->set_left(this->_start);
+                this->_size++;
             }
             return this->_nodes;
         }
@@ -515,6 +539,11 @@ class binary_tree
         bool    empty()
         {
             return (!this->_nodes || this->_start == this->_end);
+        }
+
+        size_t  size() const
+        {
+            return (this->_size);
         }
 
 
@@ -558,6 +587,7 @@ class binary_tree
                     else
                         elem->parent()->set_left(NULL);
                 }
+                this->_size--;
                 delete elem;
             }
 
@@ -596,6 +626,7 @@ class binary_tree
                 }
                 else
                     child->set_parent(NULL);
+                this->_size--;
                 delete elem;
             }
 
@@ -611,7 +642,7 @@ class binary_tree
 
 
 
-        node_type   *search(const T& v) const
+        node_type   *search(const value_type& v) const
         {
             node_type   *buf = this->_nodes;
 
@@ -619,19 +650,31 @@ class binary_tree
             {
                 if (v < (*buf)())
                 {
+                   // std::cout << "going left: " << buf << " -> " << buf->left() << std::endl;
                     buf = buf->left();
                     if (buf == this->_start)
-                        return (buf);
+                    {
+                     //   std::cout << "returned start: " << buf << std::endl;
+                        return (this->_start);
+                    }
                 }
                 else if (v > (*buf)())
                 {
+                   // std::cout << "going right: " << buf << " -> " << buf->right() << std::endl;
                     buf = buf->right();
                     if (buf == this->_end)
-                        return (buf);
+                    {
+                    //    std::cout << "returned end: " << buf << std::endl;
+                        return (this->_end);
+                    }
                 }
                 else 
+                {
+                  //  std::cout << "FOUND BUF !" << buf << std::endl;
                     return (buf);
+                }
             }
+           // std::cout <<"not found in search" << std::endl;
             return (NULL);
         }
 
@@ -729,9 +772,17 @@ class binary_tree
             return (buf);
         }
 
-        void           print() { this->_print_tree(this->_nodes); }
+        void            print() { this->_print_tree(this->_nodes); }
 
-
+        void            destroy()
+        {
+            this->_delete_tree(this->_nodes);
+            this->_nodes = NULL;
+            this->_size = 0;
+            std::cout << "delete end in destroy()" << std::endl; 
+            delete this->_end;
+            this->_end = NULL;
+        }
 
     private:
         void    _copy_tree(node_type *const buf, const node_type *const src)
@@ -768,17 +819,28 @@ class binary_tree
         void    _delete_tree(node_type* tree)
         {
             if (!tree)
-            {
-                delete this->_end;
-                return ; 
-            }
+                return ;
+
             if (tree->left())
             {
-                _delete_tree(tree->left());
+                if (tree->left() != this->_start)
+                    _delete_tree(tree->left());
+                else if  (this->_start != this->_end)
+                {
+                    delete this->_start;
+                    this->_start = 0;
+                }
             }
             if (tree->right())
             {
-                _delete_tree(tree->right());
+                if (tree->right() != this->_end)
+                    _delete_tree(tree->right());
+                else
+                {
+                    delete this->_end;
+                    this->_end = NULL;
+                    std::cout << "freeing end _delete_tree " << this->_end << std::endl;
+                }
             }
             delete(tree);
         }
@@ -834,6 +896,7 @@ class binary_tree
         node_type   *_nodes;
         node_type   *_end;
         node_type   *_start;
+        size_t      _size;
 };
 
 

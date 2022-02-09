@@ -13,13 +13,13 @@ LIB_DIR		= lib
 # - fill only with name of the file
 # - make will check for the file in SRC_DIR
 # - use "-" if empty
-SRCS=				main.cpp
+SRCS=				main_map.cpp
 
 # Librarys (only for local archives in project folder)
 LIBRARYS	= 
 
 CLANG		=	clang++
-SANITIZER	=   -g3 -fsanitize=address
+SANITIZER	=   -g3 #-fsanitize=address
 CPP_FLAGS	=	-Wextra -Wall -Werror -std=c++98 $(SANITIZER)
 CPP_IFLAGS	=	
 

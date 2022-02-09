@@ -224,11 +224,14 @@ namespace ft
 
             template <class InputIterator>
             map (InputIterator first, InputIterator last, const key_compare& comp = key_compare(),
-                                                        const allocator_type& alloc = allocator_type());
-            // TODO when insert is done
+                                                        const allocator_type& alloc = allocator_type())
+            : _base(), _alloc(alloc), _key_compare(comp), _value_compare(comp)
+            {
+                this->insert(first, last);
+            }
 
             map (const map& x)
-            : _base(tree_type(x._base)), _alloc(x._alloc), _key_compare(x._key_compare), _value_compare(x._value_compare)
+            : _base(x._base), _alloc(x._alloc), _key_compare(x._key_compare), _value_compare(x._value_compare)
             { }
 
             ~map()
@@ -310,11 +313,25 @@ namespace ft
             //clear
             void                                    clear()
             {
-                
+               /* std::cout << this->_base.end().base() << std::endl;
+                std::cout << this->_base.start() << std::endl;
+                std::cout << "-> calling destroy()" << std::endl;*/
+                this->_base.destroy();
+                //std::cout << "-> calling tree_type()" << std::endl;
+                this->_base = tree_type();
+
+                //std::cout << "new " << this->_base.end().base() << std::endl;
+               // std::cout << "new " << this->_base.start() << std::endl;
             }
 
             //count
-            size_type                               count(const key_type& k) const;
+            size_type                               count(const key_type& k) const
+            {
+                node_type *buf = this->_base.search(ft::make_pair(k, mapped_type()));
+                if (!buf || buf == this->_base.end().base() || buf == this->_base.start())
+                    return (0);
+                return (1); 
+            }
 
             //empty
             bool                                    empty() const
@@ -343,8 +360,10 @@ namespace ft
             iterator                                find(const key_type& k)
             {
                 node_type* buf = this->_base.search(ft::make_pair(k, mapped_type()));
-                if (!buf || buf == this->_base.end().base() || buf == this->_base.begin().base())
+                if (!buf || buf == this->_base.end().base() || buf == this->_base.start())
+                {
                     return this->end();
+                }
                 return (iterator(buf));
             }
 
@@ -368,14 +387,28 @@ namespace ft
                 iterator i = this->find(v.first);
                 if (i != this->end())
                     return ft::make_pair(iterator(i), false);
-                std::cout << "inserting " << v.first << std::endl;
                 return (ft::make_pair(iterator(this->_base.insert(v)), true));
             }
 
-            iterator                                insert(iterator position, const value_type& val);
+            iterator                                insert(iterator position, const value_type& v)
+            {
+                iterator i = this->find(v.first);
+                if (i != this->end())
+                    return (position);
+                if (position == this->begin() || position == this->end())
+                    return (iterator(this->_base.insert(v)));
+                return (iterator(this->_base.insert(position.base(), v)));
+            }
 
             template <class InputIterator>
-            void                                    insert(InputIterator first, InputIterator last);
+            typename ft::enable_if<ft::is_iterator<InputIterator>::value, void>::type
+            insert(InputIterator first, InputIterator last)
+            {
+                while (first != last)
+                {
+                    this->insert(*first++);
+                }
+            }
             
             //key_comp
             key_compare                             key_comp() const
@@ -392,7 +425,7 @@ namespace ft
             //size
             size_type                               size() const
             {
-                // TODO find size on insertions / deletions
+                return (this->_base.size());
             }
 
             //swap
