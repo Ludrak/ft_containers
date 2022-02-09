@@ -430,7 +430,9 @@ namespace ft
             //max_size
             size_type                               max_size() const
             {
-                return (this->_alloc.max_size());
+                return std::min<size_type>(
+                this->_alloc.max_size(),
+                std::numeric_limits<difference_type>::max());
             }
 
             //size
@@ -459,9 +461,21 @@ namespace ft
             /*  TODO OPERATORS 
              *  =========
              */
-            map                     operator= (const map& x);
+            map                     operator= (const map& x)
+            {
+                this(x);
+            }
 
-            mapped_type&            operator[](const key_type& k);
+            mapped_type&            operator[](const key_type& k)
+            {
+                iterator it = this->find(k);
+                if (it != this->end())
+                    return (it->second);
+                else {
+                    this->insert(ft::make_pair(k, mapped_type()));
+                    return (this->find(k)->second);
+                }
+            }
 
 
 

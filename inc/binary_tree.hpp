@@ -721,7 +721,7 @@ class binary_tree
         }
 
 
-        node_type   *lower_bound(const T& v) const
+        node_type   *lower_bound(const T& v) //const
         {
             node_type   *buf = this->_nodes;
 
@@ -733,11 +733,13 @@ class binary_tree
                 }
                 else if (v > (*buf)())
                 {
-                    if ((*buf->right())() < v || buf->right() == this->_end)
+                    if ((*buf->right())() > v || buf->right() == this->_end)
+                    {
                         return (buf);
+                    }
                     buf = buf->right();
                 }
-                if (v == (*buf)())
+                if (buf->left() == this->_start || v == (*buf)())
                     return (buf);
             }
             return (buf);

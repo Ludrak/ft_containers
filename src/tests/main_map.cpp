@@ -19,7 +19,7 @@ namespace LIB = ft;
 
 int main()
 {
-    std::cout << "* * *    \033[1;32mVECTOR\033[0m   * * *" << std::endl << std::endl;
+    std::cout << "* * *    \033[1;32mMAP\033[0m   * * *" << std::endl << std::endl;
 
     {
         UNIT_START("map member functions")
@@ -179,7 +179,50 @@ int main()
                         UNIT_ERROR("insert: first doesn't match: " << it->first << " expecting " << i);
                     }
                 }
-            //UNIT_TEST("map::")
+            UNIT_TEST("map::key_comp()")
+                {
+                    LIB::less<int> comp_test = m.key_comp();
+                    (void)comp_test;
+                }
+            UNIT_TEST("map::lower_bound()")
+                if (m.lower_bound(3)->first != 3)
+                {
+                    UNIT_ERROR("lower_bound: value does not match: " << m.lower_bound(3)->first << " expecting 3");
+                }
+                if (m.lower_bound(0) != m.begin())
+                {
+                    UNIT_ERROR("lower_bound: value does not match: ? expecting end");
+                }
+            UNIT_TEST("map::max_size()")
+                m.max_size(); // just to see if defined (on map max_size depends on implemented node_type)
+            UNIT_TEST("map::operator=")
+                LIB::map<int, std::string> m2 = m;
+                i = 1;
+                for (LIB::map<int, std::string>::iterator it = m2.begin(); it != m2.end(); ++it)
+                {
+                    if (it->first != i++)
+                    {
+                        UNIT_ERROR("operator=: first doesn't match: " << it->first << " expecting " << i);
+                    }
+                }
+            UNIT_TEST("map::operator[]")
+                if (m[3] != "hello03")
+                {
+                    UNIT_ERROR("operator[]: value does not match: " << m[3] << " expecting " << "hello03" )
+                }
+
+                if (m[12] != "" || m.find(12) == m.end())
+                {
+                    UNIT_ERROR("operator[]: value not inserted")
+                }
+            UNIT_TEST("map::rbegin()")
+            UNIT_TEST("map::rend()")
+            UNIT_TEST("map::size()")
+            UNIT_TEST("map::swap()")
+            UNIT_TEST("map::upper_bound()")
+            UNIT_TEST("map::value_comp()")
+
+
         UNIT_END
     }
     /*
