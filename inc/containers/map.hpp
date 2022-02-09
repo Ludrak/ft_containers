@@ -291,37 +291,32 @@ namespace ft
             //upper_bound
             iterator                                upper_bound(const key_type& k)
             {
-                return (iterator(_base.upper_bound(k)));
+                return (iterator(_base.upper_bound(ft::make_pair(k, mapped_type()))));
             }
 
             const_iterator                          upper_bound(const key_type& k) const
             {
-                return (const_iterator(_base.upper_bound(k)));
+                return (const_iterator(_base.upper_bound(ft::make_pair(k, mapped_type()))));
             }
             
             //lower_bound
             iterator                                lower_bound(const key_type& k)
             {
-                return (iterator(_base.lower_bound(k)));
+                return (iterator(_base.lower_bound(ft::make_pair(k, mapped_type()))));
             }
 
             const_iterator                          lower_bound(const key_type& k) const
             {
-                return (const_iterator(_base.lower_bound(k)));
+                return (const_iterator(_base.lower_bound(ft::make_pair(k, mapped_type()))));
             }
 
             //clear
             void                                    clear()
             {
-               /* std::cout << this->_base.end().base() << std::endl;
-                std::cout << this->_base.start() << std::endl;
-                std::cout << "-> calling destroy()" << std::endl;*/
                 this->_base.destroy();
-                //std::cout << "-> calling tree_type()" << std::endl;
-                this->_base = tree_type();
+                //this->_base = tree_type();
+                //std::cout << "new bounds thing: " << this->end().base() << " ; " << this->_base.start()  << std::endl;
 
-                //std::cout << "new " << this->_base.end().base() << std::endl;
-               // std::cout << "new " << this->_base.start() << std::endl;
             }
 
             //count
@@ -340,8 +335,15 @@ namespace ft
             }
 
             //equal_range
-            ft::pair<const_iterator,const_iterator> equal_range(const key_type& k) const;
-            ft::pair<iterator,iterator>             equal_range(const key_type& k);
+            ft::pair<const_iterator,const_iterator> equal_range(const key_type& k) const
+            {
+                return (ft::make_pair(this->lower_bound(k), this->upper_bound(k)));
+            }
+
+            ft::pair<iterator,iterator>             equal_range(const key_type& k)
+            {
+                return (ft::make_pair(this->lower_bound(k), this->upper_bound(k)));
+            }
 
             //erase
             void                                    erase(iterator position)
@@ -351,10 +353,19 @@ namespace ft
 
             size_type                               erase(const key_type& k)
             {
+                if (this->find(k) == this->end())
+                    return (0);
                 this->_base.erase(ft::make_pair(k, mapped_type()));
+                return (1);
             }
 
-            void                                    erase(iterator first, iterator last);
+            void                                    erase(iterator first, iterator last)
+            {
+                while (first != last)
+                {
+                    this->erase(first++);
+                } 
+            }
             
             //find
             iterator                                find(const key_type& k)

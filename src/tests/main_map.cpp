@@ -94,7 +94,92 @@ int main()
                 {
                     UNIT_ERROR("count: element not in map was counted")
                 }
-           // UNIT_TEST("map::")
+            UNIT_TEST("map::empty()")
+                if (!map3.empty())
+                {
+                    UNIT_ERROR("map: empty failed");
+                }
+            UNIT_TEST("map::end()")
+                map1.end();
+            UNIT_TEST("map::equal_range()")
+                if (map1.equal_range(3).first->first != 3)
+                {
+                    UNIT_ERROR("first does not match: " << map1.equal_range(3).first->first << " expecting 3");
+                }
+                else if (map1.equal_range(3).second->first != 4)
+                {
+                    UNIT_ERROR("second does not match: " << map1.equal_range(3).second->first << " expecting 4");
+                }
+            UNIT_TEST("map::erase(1)")
+                map1.erase(5);
+                if (map1.rbegin()->first == 5)
+                {
+                    UNIT_ERROR("no deletion on single element");
+                }
+            UNIT_TEST("map::erase(2)")
+                map1.erase(map1.begin());
+                if (map1.begin()->first == 1)
+                {
+                    UNIT_ERROR("no deletion on position iterator element");
+                }
+            UNIT_TEST("map::erase(3)")
+                map1.erase(map1.begin(), map1.end());
+                if (!map1.empty())
+                {
+                    UNIT_ERROR("no deletion on iterator erase");
+                }
+            UNIT_TEST("map::find()")
+                if (map2.find(4) == map2.end())
+                {
+                    UNIT_ERROR("not found in map element");
+                }
+                if (map2.find(42) != map2.end())
+                {
+                    UNIT_ERROR("found not in map element");
+                }
+            UNIT_TEST("map::get_allocator()")
+                map2.get_allocator(); // just to see if defined
+            UNIT_TEST("map::insert(1)")
+                LIB::map<int, std::string> m = LIB::map<int, std::string>();
+                m.insert(LIB::make_pair(3, "hello03"));
+                m.insert(LIB::make_pair(5, "hello05"));
+                m.insert(LIB::make_pair(4, "hello04"));
+                m.insert(LIB::make_pair(2, "hello02"));
+                m.insert(LIB::make_pair(1, "hello01"));
+                i = 1;
+                for (LIB::map<int, std::string>::iterator it = map2.begin(); it != map2.end(); ++it)
+                {
+                    if (it->first != i++)
+                    {
+                        UNIT_ERROR("insert: first doesn't match: " << it->first << " expecting " << i);
+                    }
+                }
+            UNIT_TEST("map::insert(2)")
+                m.clear();
+                m.insert(m.begin(), LIB::make_pair(3, "hello03"));
+                m.insert(m.begin(), LIB::make_pair(5, "hello05"));
+                m.insert(m.begin(), LIB::make_pair(4, "hello04"));
+                m.insert(m.begin(), LIB::make_pair(2, "hello02"));
+                m.insert(m.begin(), LIB::make_pair(1, "hello01"));                i = 1;
+                for (LIB::map<int, std::string>::iterator it = map2.begin(); it != map2.end(); ++it)
+                {
+                    if (it->first != i++)
+                    {
+                        UNIT_ERROR("insert: first doesn't match: " << it->first << " expecting " << i);
+                    }
+                }
+            UNIT_TEST("map::insert(3)")
+                m.clear();
+                m.insert(map2.begin(), map2.end());
+                i = 1;
+                for (LIB::map<int, std::string>::iterator it = map2.begin(); it != map2.end(); ++it)
+                {
+                    if (it->first != i++)
+                    {
+                        UNIT_ERROR("insert: first doesn't match: " << it->first << " expecting " << i);
+                    }
+                }
+            //UNIT_TEST("map::")
         UNIT_END
     }
     /*

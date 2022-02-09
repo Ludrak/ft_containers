@@ -385,6 +385,7 @@ class binary_tree
         {
             this->_end = new node_type();
             this->_start = this->_end;
+            //std::cout <<  "binary tree new end/start " << this->_end << std::endl;
         }
 
         binary_tree(const binary_tree& x)
@@ -411,8 +412,7 @@ class binary_tree
                 _delete_tree(this->_nodes);
             if (this->_end)
             {
-                //std::cout << "delete end binary_tree " << this->_end << " (on obj " << this << ")" << std::endl;
-                /* TODO SEE FOR THIS SHIT*/
+                //std::cout << "delete end ~binary_tree " << this->_end << " (on obj " << this << ")" << std::endl;
                 delete this->_end;
                 this->_end = NULL;
             }
@@ -478,6 +478,7 @@ class binary_tree
            avoid unknown behaviour                                         */
         node_type               *insert(const T& v)
         {
+            //std::cout << "insert " << this->_nodes << std::endl;
             return (insert (this->_nodes, v));
         }
 
@@ -515,6 +516,7 @@ class binary_tree
                         if (e)
                         {
                             buf->right()->set_right(this->_end);
+                            //std::cout << "end ::: "<< this->_end  << std::endl;
                             this->_end->set_parent(buf->right());
                         }
                         this->_size++;
@@ -530,13 +532,15 @@ class binary_tree
                 if (this->_start == this->_end)
                     this->_start = new node_type();
                 this->_nodes->set_left(this->_start);
+                //std::cout << "new start: " << this->_start << std::endl;
+                //std::cout << "new end: " << this->_end << std::endl;
                 this->_size++;
             }
             return this->_nodes;
         }
 
 
-        bool    empty()
+        bool    empty() const
         {
             return (!this->_nodes || this->_start == this->_end);
         }
@@ -564,6 +568,7 @@ class binary_tree
                 {
                     this->_nodes = NULL;
                     this->_end->set_parent(NULL);
+                    //std::cout << "deleting start reset to end" << this->_start;
                     delete this->_start;
                     this->_start = this->_end;
                 }
@@ -650,31 +655,19 @@ class binary_tree
             {
                 if (v < (*buf)())
                 {
-                   // std::cout << "going left: " << buf << " -> " << buf->left() << std::endl;
                     buf = buf->left();
                     if (buf == this->_start)
-                    {
-                     //   std::cout << "returned start: " << buf << std::endl;
                         return (this->_start);
-                    }
                 }
                 else if (v > (*buf)())
                 {
-                   // std::cout << "going right: " << buf << " -> " << buf->right() << std::endl;
                     buf = buf->right();
                     if (buf == this->_end)
-                    {
-                    //    std::cout << "returned end: " << buf << std::endl;
                         return (this->_end);
-                    }
                 }
                 else 
-                {
-                  //  std::cout << "FOUND BUF !" << buf << std::endl;
                     return (buf);
-                }
             }
-           // std::cout <<"not found in search" << std::endl;
             return (NULL);
         }
 
@@ -779,9 +772,10 @@ class binary_tree
             this->_delete_tree(this->_nodes);
             this->_nodes = NULL;
             this->_size = 0;
-            std::cout << "delete end in destroy()" << std::endl; 
+            //std::cout << "delete end in destroy()" << this->_end << std::endl; 
             delete this->_end;
-            this->_end = NULL;
+            this->_end = new node_type();
+            this->_start = this->_end;
         }
 
     private:
@@ -828,7 +822,8 @@ class binary_tree
                 else if  (this->_start != this->_end)
                 {
                     delete this->_start;
-                    this->_start = 0;
+                    //std::cout << "delete start _delete_tree " << this->_start << std::endl;
+                    this->_start = NULL;
                 }
             }
             if (tree->right())
@@ -838,8 +833,8 @@ class binary_tree
                 else
                 {
                     delete this->_end;
+                    //std::cout << "delete end _delete_tree " << this->_end << std::endl;
                     this->_end = NULL;
-                    std::cout << "freeing end _delete_tree " << this->_end << std::endl;
                 }
             }
             delete(tree);
