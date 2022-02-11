@@ -191,7 +191,7 @@ int main()
                 }
                 if (m.lower_bound(0) != m.begin())
                 {
-                    UNIT_ERROR("lower_bound: value does not match: ? expecting end");
+                    UNIT_ERROR("lower_bound: value does not match: ? expecting begin");
                 }
             UNIT_TEST("map::max_size()")
                 m.max_size(); // just to see if defined (on map max_size depends on implemented node_type)
@@ -216,93 +216,134 @@ int main()
                     UNIT_ERROR("operator[]: value not inserted")
                 }
             UNIT_TEST("map::rbegin()")
+                m.rbegin();
             UNIT_TEST("map::rend()")
+                m.rend();
             UNIT_TEST("map::size()")
-            UNIT_TEST("map::swap()")
+                if (m.size() != 6)
+                {
+                    UNIT_ERROR("size: value does not match");
+                }
+           UNIT_TEST("map::swap()")
+                LIB::map<int, std::string> map_swapped = LIB::map<int, std::string>();
+                m.swap(map_swapped);
+                if (!m.empty())
+                {
+                    UNIT_ERROR("swap: swapper wasn't swapped");
+                }
+                if (map_swapped.size() != 6)
+                {
+                    UNIT_ERROR("swap: swapped wasn't swapped (size: " << map_swapped.size() << ")");
+                }
             UNIT_TEST("map::upper_bound()")
+                if (map_swapped.upper_bound(3)->first != 4)
+                {
+                    UNIT_ERROR("upper_bound: value does not match: " << m.upper_bound(3)->first << " expecting 4");
+                }
+                if (map_swapped.upper_bound(5)->first != 12)
+                {
+                    UNIT_ERROR("upper_bound: value does not match: ? expecting end");
+                }
             UNIT_TEST("map::value_comp()")
-
+                m.value_comp();
 
         UNIT_END
     }
-    /*
-    LIB::map<int, std::string>  m = LIB::map<int, std::string>();
-
-    m.insert(LIB::make_pair(1, std::string("hello00")));
-    m.insert(LIB::make_pair(7, std::string("hello01")));
-    m.insert(LIB::make_pair(3, std::string("hello02")));
-    m.insert(LIB::make_pair(10, std::string("hello03")));
-    m.insert(LIB::make_pair(8, std::string("hello04")));
-    m.insert(LIB::make_pair(2, std::string("hello05")));
-    m.insert(LIB::make_pair(5, std::string("hello06")));
-    m.insert(LIB::make_pair(9, std::string("hello07")));
-    m.insert(LIB::make_pair(4, std::string("hello08")));
-    m.insert(LIB::make_pair(6, std::string("hello09")));
-
-    ft::pair<LIB::map<int, std::string>::iterator, bool> p = m.insert(LIB::make_pair(6, std::string("hello09")));
-    std::cout << "double insert (should be 0) : " << p.second << std::endl;
-
-    for (LIB::map<int, std::string>::iterator it = m.begin(); it != m.end(); ++it)
-    {
-        std::cout << "++iterator: " << it->first << " = " << it->second << std::endl;
-    }
-    for (LIB::map<int, std::string>::iterator it = m.begin(); it != m.end(); it++)
-    {
-        std::cout << "iterator++: " << it->first << " = " << it->second << std::endl;
-    }
-    for (LIB::map<int, std::string>::reverse_iterator it = m.rbegin(); it != m.rend(); ++it)
-    {
-        std::cout << "++reverse_iterator: " << it->first << " = " << it->second << std::endl;
-    }
-    for (LIB::map<int, std::string>::reverse_iterator it = m.rbegin(); it != m.rend(); it++)
-    {
-        std::cout << "reverse_iterator++: " << it->first << " = " << it->second << std::endl;
-    }
-    
 
 
-    
-    const LIB::map<int, std::string> map2 = LIB::map<int, std::string>(m);
 
-    for (LIB::map<int, std::string>::const_iterator it = map2.begin(); it != map2.end(); ++it)
     {
-        std::cout << "++const_iterator: " << it->first << " = " << it->second << std::endl;
-    }
-    for (LIB::map<int, std::string>::const_iterator it = map2.begin(); it != map2.end(); it++)
-    {
-        std::cout << "const_iterator++: " << it->first << " = " << it->second << std::endl;
-    }
-    for (LIB::map<int, std::string>::const_reverse_iterator it = map2.rbegin(); it != map2.rend(); ++it)
-    {
-        std::cout << "++const_reverse_iterator: " << it->first << " = " << it->second << std::endl;
-    }
-    for (LIB::map<int, std::string>::const_reverse_iterator it = map2.rbegin(); it != map2.rend(); it++)
-    {
-        std::cout << "const_reverse_iterator++: " << it->first << " = " << it->second << std::endl;
-    }
+        UNIT_START("map iterators")
+        LIB::map<int, std::string> map = LIB::map<int, std::string>();
+        for (int i = 0; i < 50; ++i)
+                map.insert(LIB::make_pair(i, "hello"+std::to_string(i)));
+        const LIB::map<int, std::string> const_map = LIB::map<int, std::string>(map);
 
-    LIB::map<int, std::string>  map_insert2 = LIB::map<int, std::string>();
-
-    map_insert2.insert(map_insert2.begin(), LIB::make_pair(1, std::string("hello00")));
-    map_insert2.insert(map_insert2.begin(), LIB::make_pair(7, std::string("hello01")));
-    map_insert2.insert(map_insert2.begin(), LIB::make_pair(3, std::string("hello02")));
-    map_insert2.insert(map_insert2.begin(), LIB::make_pair(10, std::string("hello03")));
-    map_insert2.insert(map_insert2.begin(), LIB::make_pair(8, std::string("hello04")));
-    map_insert2.insert(map_insert2.begin(), LIB::make_pair(2, std::string("hello05")));
-    map_insert2.insert(map_insert2.begin(), LIB::make_pair(5, std::string("hello06")));
-    map_insert2.insert(map_insert2.begin(), LIB::make_pair(9, std::string("hello07")));
-    map_insert2.insert(map_insert2.begin(), LIB::make_pair(4, std::string("hello08")));
-    map_insert2.insert(map_insert2.begin(), LIB::make_pair(6, std::string("hello09")));
-    for (LIB::map<int, std::string>::iterator it = map_insert2.begin(); it != map_insert2.end(); ++it)
-    {
-        std::cout << "insert(2): " << it->first << " = " << it->second << std::endl;
+            UNIT_TEST("map::iterator()")
+            {
+                int i = 0;
+                for (LIB::map<int, std::string>::iterator it = map.begin(); it != map.end(); ++it)
+                {
+                    if (it->first != i++)
+                    {
+                        UNIT_ERROR("map::iterator::operator*() : output doesn't match: " << it->first << " (expecting " << i << ")")
+                        break;
+                    }
+                else if (!(it == it))
+                    {
+                        UNIT_ERROR("map::iterator::operator==() : output doesn't match: false (expecting true )")
+                        break;
+                    }
+                    else if (it != it)
+                    {
+                        UNIT_ERROR("map::iterator::operator!=() : output doesn't match: true (expecting false)")
+                        break;
+                    }
+                }
+                i = 0;
+                for (LIB::map<int, std::string>::iterator it = map.begin(); it != map.end(); it++)
+                {
+                    if (it->first != i++)
+                    {
+                        UNIT_ERROR("map::iterator::operator*() : output doesn't match: " << it->first << " (expecting " << i << ")")
+                        break;
+                    }
+                else if (!(it == it))
+                    {
+                        UNIT_ERROR("map::iterator::operator==() : output doesn't match: false (expecting true )")
+                        break;
+                    }
+                    else if (it != it)
+                    {
+                        UNIT_ERROR("map::iterator::operator!=() : output doesn't match: true (expecting false)")
+                        break;
+                    }
+                }
+            }
+            /*
+            UNIT_TEST("map::const_iterator()")
+            {
+                int i = 0;
+                for (LIB::map<int, std::string>::const_iterator it = const_map.begin(); it != const_map.end(); ++it)
+                {
+                    if (it->first != i++)
+                    {
+                        UNIT_ERROR("map::const_iterator::operator*() : output doesn't match: " << it->first << " (expecting " << i << ")")
+                        break;
+                    }
+                else if (!(it == it))
+                    {
+                        UNIT_ERROR("map::const_iterator::operator==() : output doesn't match: false (expecting true )")
+                        break;
+                    }
+                    else if (it != it)
+                    {
+                        UNIT_ERROR("map::const_iterator::operator!=() : output doesn't match: true (expecting false)")
+                        break;
+                    }
+                }
+                i = 0;
+                for (LIB::map<int, std::string>::const_iterator it = const_map.begin(); it != const_map.end(); it++)
+                {
+                    if (it->first != i++)
+                    {
+                        UNIT_ERROR("map::const_iterator::operator*() : output doesn't match: " << it->first << " (expecting " << i << ")")
+                        break;
+                    }
+                else if (!(it == it))
+                    {
+                        UNIT_ERROR("map::const_iterator::operator==() : output doesn't match: false (expecting true )")
+                        break;
+                    }
+                    else if (it != it)
+                    {
+                        UNIT_ERROR("map::const_iterator::operator!=() : output doesn't match: true (expecting false)")
+                        break;
+                    }
+                }
+            }*/
+            
+        UNIT_END
     }
-
-    LIB::map<int, std::string>  map_insert3 = LIB::map<int, std::string>();
-    map_insert3.insert(map_insert2.begin(), map_insert2.end());
-    for (LIB::map<int, std::string>::iterator it = map_insert3.begin(); it != map_insert3.end(); ++it)
-    {
-        std::cout << "insert(3): " << it->first << " = " << it->second << std::endl;
-    }*/
     return (0);
 }

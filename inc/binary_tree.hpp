@@ -10,14 +10,18 @@
 /*****************************    _tree_node    *********************************/
 /********************************************************************************/
 
-template<class T>
+template<class T, class Allocator>
 struct _tree_node
 {
+    public:
+        typedef Allocator   allocator_type;
+
     private:
-        T           *_value;
-        _tree_node  *_left;
-        _tree_node  *_right;
-        _tree_node  *_parent;
+        T               *_value;
+        _tree_node      *_left;
+        _tree_node      *_right;
+        _tree_node      *_parent;
+        allocator_type  _alloc;
 
     public:
         _tree_node()
@@ -25,15 +29,27 @@ struct _tree_node
         { }
 
         _tree_node(const T& value)
-        : _value(new T(value)), _left(NULL), _right(NULL), _parent(NULL)
-        { }
+        : _left(NULL), _right(NULL), _parent(NULL)
+        {
+            this->_value = this->_alloc.allocate(1);
+            this->_alloc.construct(this->_value, value);
+        }
 
         _tree_node(const _tree_node& tree)
-        : _value(new T(tree())), _left(tree._left), _right(tree._right), _parent(tree._parent)
-        { }
+        : _left(tree._left), _right(tree._right), _parent(tree._parent)
+        { 
+            this->_value = this->_alloc.allocate(1);;
+            this->_alloc.construct(this->_value, tree());
+        }
 
         ~_tree_node()
-        { delete this->_value; }
+        {
+            if (this->_value)
+            {
+                this->_alloc.deallocate(this->_value, 1);
+                this->_alloc.destroy(this->_value);
+            }
+        }
 
         T   &operator()() const
         { return (*this->_value); }
@@ -68,22 +84,22 @@ struct _tree_node
         }
 };
 
-template<class T> bool operator==(const _tree_node<T> &a, const _tree_node<T> &b)
+template<class T, class Allocator> bool operator==(const _tree_node<T, Allocator> &a, const _tree_node<T, Allocator> &b)
 { return (a() == b()); }
 
-template<class T> bool operator!=(const _tree_node<T> &a, const _tree_node<T> &b)
+template<class T, class Allocator> bool operator!=(const _tree_node<T, Allocator> &a, const _tree_node<T, Allocator> &b)
 { return (a() != b()); }
 
-template<class T> bool operator<(const _tree_node<T> &a, const _tree_node<T> &b)
+template<class T, class Allocator> bool operator<(const _tree_node<T, Allocator> &a, const _tree_node<T, Allocator> &b)
 { return (a() < b()); }
 
-template<class T> bool operator>(const _tree_node<T> &a, const _tree_node<T> &b)
+template<class T, class Allocator> bool operator>(const _tree_node<T, Allocator> &a, const _tree_node<T, Allocator> &b)
 { return (a() > b()); }
 
-template<class T> bool operator<=(const _tree_node<T> &a, const _tree_node<T> &b)
+template<class T, class Allocator> bool operator<=(const _tree_node<T, Allocator> &a, const _tree_node<T, Allocator> &b)
 { return (a() <= b()); }
 
-template<class T> bool operator>=(const _tree_node<T> &a, const _tree_node<T> &b)
+template<class T, class Allocator> bool operator>=(const _tree_node<T, Allocator> &a, const _tree_node<T, Allocator> &b)
 { return (a() >= b()); }
 
 
@@ -95,8 +111,8 @@ template<class T, class Allocator>
 class binary_tree
 {
     public:
-        typedef _tree_node<T>   node_type;
-        typedef T               value_type;
+        typedef _tree_node<T, Allocator>    node_type;
+        typedef T                           value_type;
 
     public:
         class iterator
@@ -774,7 +790,6 @@ class binary_tree
             this->_delete_tree(this->_nodes);
             this->_nodes = NULL;
             this->_size = 0;
-            //std::cout << "delete end in destroy()" << this->_end << std::endl; 
             delete this->_end;
             this->_end = new node_type();
             this->_start = this->_end;
