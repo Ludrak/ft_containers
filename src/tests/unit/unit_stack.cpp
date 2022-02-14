@@ -139,10 +139,4 @@ void unit_stack()
                 }
         UNIT_END
     }
-
-    {
-        UNIT_START("stack non member functions")
-
-        UNIT_END
-    }
 }
