@@ -1,25 +1,18 @@
 #include <iostream>
 
+#include "unit_test.hpp"
+#include "containers_test.hpp"
+
 #include "vector.hpp"
 #include <vector>
 
 namespace LIB = ft;
 
-#define UNIT_START(name)        std::cout << "\033[0m-> \033[1;32mUnit\033[0m ("name") : " << std::endl; \
-                                int errors = 0; \
-                                int max_tests = 0; \
-
-#define UNIT_END                if (errors != 0) \
-                                    std::cout << "\033[1;31m✗  Unit Failed ! [" << errors << "/" << max_tests << " KO tests]" << std::endl << std::endl; \
-                                else \
-                                    std::cout << "\033[1;32m✓  Unit Success \033[0m[\033[1;32m" << max_tests << "\033[0m/\033[1;32m" << max_tests << "\033[0m]\033[0m" << std::endl << std::endl;
-
-#define UNIT_TEST(test_name)    max_tests++; std::cout << " . testing " << test_name << std::endl;
-#define UNIT_ERROR(error)       errors++; std::cout << "   \033[1;31mERROR\033[0m: " << error << std::endl << std::endl;
-
 class SomeClass
 {
     public:
+     SomeClass() : _value(0) { }
+      //  SomeClass(const SomeClass& c) : _value(c._value) { }
         SomeClass(int x) : _value(x) { }
     
         int     getValue() const { return this->_value; }
@@ -29,7 +22,7 @@ class SomeClass
         int _value;
 };
 
-int main()
+void unit_vector()
 {
     std::cout << "* * *    \033[1;32mVECTOR\033[0m   * * *" << std::endl << std::endl;
 
@@ -43,10 +36,7 @@ int main()
                 
             UNIT_TEST("vector::vector(3)")
                 LIB::vector<int> v = LIB::vector<int>((size_t)10, 10);
-               // LIB::vector<int>::iterator  first = v.begin();
-               // LIB::vector<int>::iterator  last = v.end();
-                 
-                 LIB::vector<int> vX = LIB::vector<int>();
+                LIB::vector<int> vX = LIB::vector<int>();
             
             UNIT_TEST("vector::vector(4)")
                 LIB::vector<int> vY = LIB::vector<int>(vector);
@@ -545,5 +535,4 @@ int main()
             }
         UNIT_END
     }
-    return (0);
 }

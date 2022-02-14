@@ -551,57 +551,7 @@ namespace ft
     {
         x.swap(y);
     }
-} 
-/*
-template<
-class Key,
-class T,
-class Compare,
-class Allocator
-> 
-bool             operator==(const ft::map<Key, T, Compare, Allocator>& lhs, 
-                            const ft::map<Key, T, Compare, Allocator>& rhs )
-{
-    typename ft::map<Key, T, Compare, Allocator>::iterator it = lhs.begin();
-    for (typename ft::map<Key, T, Compare, Allocator>::iterator it2 = rhs.begin(); it2 != rhs.end(); ++it2)
-    {
-        if (*it != it2)
-            return (false);
-        ++it;
-    }
-    return (true);
-}*/
+}
 
-
- /*
-            friend bool             operator!=( const map<Key, T, Compare, Allocator>& lhs,
-                                                const map<Key, T, Compare, Allocator>& rhs )
-            {
-
-            }     
-
-            friend bool             operator< ( const map<Key, T, Compare, Allocator>& lhs,
-                                                const map<Key, T, Compare, Allocator>& rhs )
-            {
-
-            }     
-
-            friend bool             operator<=( const map<Key, T, Compare, Allocator>& lhs,
-                                                const map<Key, T, Compare, Allocator>& rhs )
-            {
-
-            }     
-
-            friend bool             operator> ( const map<Key, T, Compare, Allocator>& lhs,
-                                                const map<Key, T, Compare, Allocator>& rhs )
-            {
-
-            }     
-
-            friend bool             operator>=( const map<Key, T, Compare, Allocator>& lhs,
-                                                const map<Key, T, Compare, Allocator>& rhs )
-            {
-
-            }    */ 
 
 #endif // MAP_HPP

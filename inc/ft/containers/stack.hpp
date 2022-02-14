@@ -74,6 +74,7 @@
 
 
 # include "vector.hpp"
+# include <stack>
 
 namespace ft
 {
@@ -96,9 +97,13 @@ namespace ft
              *  ==========================
              */
 
-            explicit stack (const container_type& ctnr = container_type());
+            explicit stack (const container_type& ctnr = container_type())
+            : _container(ctnr)
+            { }
 
-            ~stack();
+            ~stack()
+            {
+            }
 
 
 
@@ -106,44 +111,92 @@ namespace ft
              *  ================
              */
             //empty
-            bool            empty() const;
+            bool            empty() const
+            {
+                return (this->_container.empty());
+            }
 
             //size
-            size_type       size() const;
+            size_type       size() const
+            {
+                return (this->_container.size());
+            }
 
             //top
-            reference       top();
-            const_reference top() const;
+            reference       top()
+            {
+                return (*this->_container.rbegin());
+            }
+            const_reference top() const
+            {
+                return (*this->_container.rbegin());
+            }
 
             //push
-            void            push(const value_type& x);
-            void            push(value_type& x);
+            void            push(const value_type& x)
+            {
+                this->_container.push_back(x);
+            }
+            void            push(value_type& x)
+            {
+                this->_container.push_back(x);
+            }
             
             //pop
-            void            pop();
+            void            pop()
+            {
+                this->_container.erase(--this->_container.end());
+            }
 
 
 
             /*  OPERATORS
              *  =========
              */
-            stack&          operator= (const stack& q) = default;
-            stack&          operator= (stack& q) = default;
+            stack&          operator= (const stack& q)
+            {
+                this->_container = container_type(q._container);
+                return (*this);
+            }
 
+            stack&          operator= (stack& q)
+            {
+                this->_container = container_type(q._container);
+                return (*this);
+            }
 
+            friend bool operator==(stack<T, Container> const& x, stack<T, Container> const& y) 
+            {
+                    return (x._container == y._container);
+            }
 
-            /*  RELATIONAL OPERATORS
-             *  ====================
-             */
-            friend bool     operator==(const stack<T,Container>& lhs, const stack<T,Container>& rhs);
-            friend bool     operator!=(const stack<T,Container>& lhs, const stack<T,Container>& rhs);
-            friend bool     operator< (const stack<T,Container>& lhs, const stack<T,Container>& rhs);
-            friend bool     operator<=(const stack<T,Container>& lhs, const stack<T,Container>& rhs);
-            friend bool     operator> (const stack<T,Container>& lhs, const stack<T,Container>& rhs);
-            friend bool     operator>=(const stack<T,Container>& lhs, const stack<T,Container>& rhs);
-        
+            friend bool operator< (stack<T, Container> const& x, stack<T, Container> const& y) 
+            {
+                return (x._container < y._container);
+            }
+
+            friend bool operator!=(stack<T, Container> const& x, stack<T, Container> const& y) 
+            {
+                return !(x == y);
+            }
+
+            friend bool operator> (stack<T, Container> const& x, stack<T, Container> const& y) 
+            {
+                return y < x;
+            }
+
+            friend bool operator>=(stack<T, Container> const& x, stack<T, Container> const& y) 
+            {
+                return !(x < y);
+            }
+
+            friend bool operator<=(stack<T, Container> const& x, stack<T, Container> const& y) 
+            {
+                return !(y < x);
+            }
+            
         protected:
-            container_type c;
+            container_type _container;
     };
 }
 

@@ -483,8 +483,9 @@ namespace ft
            
 
             vector(const vector& x)
-            : _data(x._data), _capacity(x._capacity), _size(x._size), _allocator(x._allocator)
+             : _data(NULL), _capacity(0), _size(0), _allocator(x._allocator)
             {
+                this->assign(x.begin(), x.end());
             }
 
 
