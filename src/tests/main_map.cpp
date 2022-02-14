@@ -300,7 +300,6 @@ int main()
                     }
                 }
             }
-            /*
             UNIT_TEST("map::const_iterator()")
             {
                 int i = 0;
@@ -341,9 +340,174 @@ int main()
                         break;
                     }
                 }
-            }*/
+            }
+            UNIT_TEST("map::reverse_iterator()")
+            {
+                int i = 49;
+                for (LIB::map<int, std::string>::reverse_iterator it = map.rbegin(); it != map.rend(); ++it)
+                {
+                    if (it->first != i--)
+                    {
+                        UNIT_ERROR("map::reverse_iterator::operator*() : output doesn't match: " << it->first << " (expecting " << i << ")")
+                        break;
+                    }
+                else if (!(it == it))
+                    {
+                        UNIT_ERROR("map::reverse_iterator::operator==() : output doesn't match: false (expecting true )")
+                        break;
+                    }
+                    else if (it != it)
+                    {
+                        UNIT_ERROR("map::reverse_iterator::operator!=() : output doesn't match: true (expecting false)")
+                        break;
+                    }
+                }
+                i = 49;
+                for (LIB::map<int, std::string>::reverse_iterator it = map.rbegin(); it != map.rend(); it++)
+                {
+                    if (it->first != i--)
+                    {
+                        UNIT_ERROR("map::reverse_iterator::operator*() : output doesn't match: " << it->first << " (expecting " << i << ")")
+                        break;
+                    }
+                else if (!(it == it))
+                    {
+                        UNIT_ERROR("map::reverse_iterator::operator==() : output doesn't match: false (expecting true )")
+                        break;
+                    }
+                    else if (it != it)
+                    {
+                        UNIT_ERROR("map::reverse_iterator::operator!=() : output doesn't match: true (expecting false)")
+                        break;
+                    }
+                }
+            }
+
+            UNIT_TEST("map::const_reverse_iterator()")
+            {
+                int i = 49;
+                for (LIB::map<int, std::string>::const_reverse_iterator it = const_map.rbegin(); it != const_map.rend(); ++it)
+                {
+                    if (it->first != i--)
+                    {
+                        UNIT_ERROR("map::const_reverse_iterator::operator*() : output doesn't match: " << it->first << " (expecting " << i << ")")
+                        break;
+                    }
+                else if (!(it == it))
+                    {
+                        UNIT_ERROR("map::const_reverse_iterator::operator==() : output doesn't match: false (expecting true )")
+                        break;
+                    }
+                    else if (it != it)
+                    {
+                        UNIT_ERROR("map::const_reverse_iterator::operator!=() : output doesn't match: true (expecting false)")
+                        break;
+                    }
+                }
+                i = 49;
+                for (LIB::map<int, std::string>::const_reverse_iterator it = const_map.rbegin(); it != const_map.rend(); it++)
+                {
+                    if (it->first != i--)
+                    {
+                        UNIT_ERROR("map::const_reverse_iterator::operator*() : output doesn't match: " << it->first << " (expecting " << i << ")")
+                        break;
+                    }
+                else if (!(it == it))
+                    {
+                        UNIT_ERROR("map::const_reverse_iterator::operator==() : output doesn't match: false (expecting true )")
+                        break;
+                    }
+                    else if (it != it)
+                    {
+                        UNIT_ERROR("map::const_reverse_iterator::operator!=() : output doesn't match: true (expecting false)")
+                        break;
+                    }
+                }
+            }
             
         UNIT_END
     }
+
+    {
+        UNIT_START("map operators")
+            LIB::map<int, std::string> map = LIB::map<int, std::string>();
+            LIB::map<int, std::string> map2 = LIB::map<int, std::string>();
+            map.insert(LIB::make_pair(1, "hello"));
+            map.insert(LIB::make_pair(2, "hello2"));
+            map.insert(LIB::make_pair(3, "hello3"));
+            map.insert(LIB::make_pair(4, "hello3"));
+            map.insert(LIB::make_pair(5, "hello3"));
+            map2 = map;
+
+            UNIT_TEST("map::operator==()")
+                if (!(map == map2))
+                {
+                    UNIT_ERROR("operator== : equals maps are not equals");
+                }
+
+           UNIT_TEST("map::operator!=()")
+                if (map != map2)
+                {
+                    UNIT_ERROR("operator!= : equals maps are different");
+                }
+
+            UNIT_TEST("map::operator<=()")
+                if (!(map <= map2))
+                {
+                    UNIT_ERROR("operator<= : equals maps are not equals");
+                }
+                map.erase(1);
+                if (map <= map2)
+                {
+                    UNIT_ERROR("operator<= : order not respected");
+                }
+
+
+            UNIT_TEST("map::operator<()")
+                if (map < map2)
+                {
+                    UNIT_ERROR("operator< : order not respected");
+                }
+
+            UNIT_TEST("map::operator>=()")
+                if (!(map >= map2))
+                {
+                    UNIT_ERROR("operator>= : equals maps are not equals");
+                }
+                if (map2 >= map)
+                {
+                    UNIT_ERROR("operator>= : order not respected");
+                }
+
+            UNIT_TEST("map::operator>()")
+                if (map2 > map)
+                {
+                    UNIT_ERROR("operator> : order not respected");
+                }
+        UNIT_END
+    }  
+
+    {
+        UNIT_START("map non member functions")
+            LIB::map<int, std::string> m = LIB::map<int, std::string>();
+            m.insert(LIB::make_pair(3, "hello03"));
+            m.insert(LIB::make_pair(5, "hello05"));
+            m.insert(LIB::make_pair(4, "hello04"));
+            m.insert(LIB::make_pair(2, "hello02"));
+            m.insert(LIB::make_pair(1, "hello01"));
+            
+           UNIT_TEST("map::swap()")
+                LIB::map<int, std::string> map_swapped = LIB::map<int, std::string>();
+                swap(m, map_swapped);
+                if (!m.empty())
+                {
+                    UNIT_ERROR("swap: swapper wasn't swapped");
+                }
+                if (map_swapped.size() != 5)
+                {
+                    UNIT_ERROR("swap: swapped wasn't swapped (size: " << map_swapped.size() << ")");
+                }
+        UNIT_END
+    }    
     return (0);
 }

@@ -7,11 +7,8 @@
 namespace ft
 {
 	template <class InputIterator1, class InputIterator2>
-    bool    equal(
-        typename ft::enable_if< is_iterator<InputIterator1>::value, InputIterator1 >::type  first1,
-		InputIterator1                                                                      last1,
-		typename ft::enable_if< is_iterator<InputIterator2>::value, InputIterator2 >::type  first2
-        )
+    typename ft::enable_if< is_iterator<InputIterator1>::value && is_iterator<InputIterator2>::value, bool >::type
+    equal(InputIterator1 first1, InputIterator1 last1, InputIterator2 first2)
     {
         while (first1 != last1)
         {
@@ -24,12 +21,8 @@ namespace ft
     }
 
     template <class InputIterator1, class InputIterator2, class BinaryPredicate>
-	bool    equal (
-		typename ft::enable_if< is_iterator<InputIterator1>::value, InputIterator1 >::type first1,
-		InputIterator1                                                                     last1,
-		typename ft::enable_if< is_iterator<InputIterator2>::value, InputIterator2 >::type first2,
-		BinaryPredicate                                                                    pred
-        )
+    typename ft::enable_if< is_iterator<InputIterator1>::value && is_iterator<InputIterator2>::value, bool >::type
+	equal (InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, BinaryPredicate pred)
 	{
         while (first1 != last1)
         {

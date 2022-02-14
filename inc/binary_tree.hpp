@@ -494,7 +494,6 @@ class binary_tree
            avoid unknown behaviour                                         */
         node_type               *insert(const T& v)
         {
-            //std::cout << "insert " << this->_nodes << std::endl;
             return (insert (this->_nodes, v));
         }
 
