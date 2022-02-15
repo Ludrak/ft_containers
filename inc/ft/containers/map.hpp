@@ -321,10 +321,6 @@ namespace ft
             {
                 delete this->_base;
                 this->_base = new tree_type();
-                //this->_base->destroy();
-                //this->_base = tree_type();
-                //std::cout << "new bounds thing: " << this->end().base() << " ; " << this->_base->start()  << std::endl;
-
             }
 
             //count
@@ -465,7 +461,7 @@ namespace ft
 
 
 
-            /*  TODO OPERATORS 
+            /*  OPERATORS 
              *  =========
              */
             map                     operator= (const map& x)

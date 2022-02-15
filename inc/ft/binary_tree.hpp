@@ -295,7 +295,6 @@ class binary_tree
 
                 bool									operator!=(const const_iterator &rhs) const
                 {
-                   // std::cout << this->_value << " != " << rhs._value << " = " << (this->_value != rhs._value) << std::endl;
                     return (this->_value != rhs._value);
                 }
                 
@@ -401,7 +400,6 @@ class binary_tree
         {
             this->_end = new node_type();
             this->_start = this->_end;
-            //std::cout <<  "binary tree new end/start " << this->_end << std::endl;
         }
 
         binary_tree(const binary_tree& x)
@@ -428,7 +426,6 @@ class binary_tree
                 _delete_tree(this->_nodes);
             if (this->_end)
             {
-                //std::cout << "delete end ~binary_tree " << this->_end << " (on obj " << this << ")" << std::endl;
                 delete this->_end;
                 this->_end = NULL;
             }
@@ -531,7 +528,6 @@ class binary_tree
                         if (e)
                         {
                             buf->right()->set_right(this->_end);
-                            //std::cout << "end ::: "<< this->_end  << std::endl;
                             this->_end->set_parent(buf->right());
                         }
                         this->_size++;
@@ -547,8 +543,6 @@ class binary_tree
                 if (this->_start == this->_end)
                     this->_start = new node_type();
                 this->_nodes->set_left(this->_start);
-                //std::cout << "new start: " << this->_start << std::endl;
-                //std::cout << "new end: " << this->_end << std::endl;
                 this->_size++;
             }
             return this->_nodes;
@@ -583,7 +577,6 @@ class binary_tree
                 {
                     this->_nodes = NULL;
                     this->_end->set_parent(NULL);
-                    //std::cout << "deleting start reset to end" << this->_start;
                     delete this->_start;
                     this->_start = this->_end;
                 }
@@ -736,7 +729,7 @@ class binary_tree
         }
 
 
-        node_type   *lower_bound(const T& v) //const
+        node_type   *lower_bound(const T& v)
         {
             node_type   *buf = this->_nodes;
 
@@ -838,7 +831,6 @@ class binary_tree
                 else if  (this->_start != this->_end)
                 {
                     delete this->_start;
-                    //std::cout << "delete start _delete_tree " << this->_start << std::endl;
                     this->_start = NULL;
                 }
             }
@@ -849,7 +841,6 @@ class binary_tree
                 else
                 {
                     delete this->_end;
-                    //std::cout << "delete end _delete_tree " << this->_end << std::endl;
                     this->_end = NULL;
                 }
             }

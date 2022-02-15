@@ -578,17 +578,15 @@ namespace ft
             //at
             reference               at (size_type n)
             {
-                // TODO implement ft::out_of_range
                 if (n >= this->_size)
-                    throw std::out_of_range("vector::at TODO ERROR STRING");
+                    throw std::out_of_range("vector::at");
                 return (this->_data[n]);
             }
 
             const_reference         at (size_type n) const
             {
-                // TODO implement ft::out_of_range
                 if (n >= this->_size)
-                    throw std::out_of_range("vector::at TODO ERROR STRING");
+                    throw std::out_of_range("vector::at");
                 return (this->_data[n]);
             }
 
@@ -762,7 +760,7 @@ namespace ft
                 if (this->_size > 0)
                 {
                     --this->_size;
-                    this->_allocator.destroy(this->_data + this->_size + 1); // REVIEW
+                    this->_allocator.destroy(this->_data + this->_size + 1);
                 }
             }
 
@@ -802,7 +800,6 @@ namespace ft
                     this->_allocator.construct(&buf[i], this->_data[i]);
                     ++i;
                 }
-                // TODO destroy data to destroy replaced data
                 this->_allocator.deallocate(this->_data, old_capacity);
                 this->_data = buf;
             }
