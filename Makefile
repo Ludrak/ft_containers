@@ -1,7 +1,8 @@
 .PHONY: clean fclean re all os check_sources check_headers
 
 # Name of target executable
-NAME		= ft_containers
+NAME		= containers_tests
+NAME_STD 	= containers_tests_std	
 
 # Locations 
 SRC_DIR		= src
@@ -16,7 +17,7 @@ LIB_DIR		= lib
 SRCS=				main.cpp unit_map.cpp unit_vector.cpp unit_stack.cpp
 
 # Librarys (only for local archives in project folder)
-LIBRARYS	= 
+LIBRARY 	= 	ft
 
 CLANG		=	clang++
 SANITIZER	=   -g3 -fsanitize=address
@@ -48,6 +49,10 @@ CPP_LFLAG	+=	$(addprefix -L,$(addprefix $(LIB_DIR), $(LIBRARYS)))
 #   Main rule
 all: check_headers check_sources $(NAME)
 	@echo "$(PREFIX_PROJECT)$(PREFIX_INFO) done"
+
+std: LIBRARY=std
+std: NAME=$(NAME_STD)
+std: re
 
 #	check_sources :
 #	simple bash script to check duplicates sources files 
@@ -98,7 +103,7 @@ $(BIN_DIR):
 # Compilation rule 
 $(BIN_DIR)/$(SRC_DIR)/%.o : $(SRC_DIR)/%.cpp $(HEADER_FILES)
 	@mkdir -p $(BIN_DIR)/$(shell dirname $<)
-	@$(CLANG) -c $< -o $@ $(CPP_FLAGS) $(CPP_IFLAGS)
+	@$(CLANG) -c $< -o $@ $(CPP_FLAGS) $(CPP_IFLAGS) -D LIBRARY=$(LIBRARY)
 	@echo "$(PREFIX_PROJECT)$(PREFIX_COMP) Compiled: $(shell basename $<)"
 
 # clean rule

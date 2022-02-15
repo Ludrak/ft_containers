@@ -6,7 +6,7 @@
 #include "vector.hpp"
 #include <vector>
 
-namespace LIB = ft;
+namespace LIB = LIBRARY;
 
 class SomeClass
 {

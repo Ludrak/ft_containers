@@ -7,7 +7,7 @@
 
 #include <iostream>
 
-namespace LIB = ft;
+namespace LIB = LIBRARY;
 
 void unit_stack()
 {

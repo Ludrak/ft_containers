@@ -6,7 +6,7 @@
 #include "map.hpp"
 #include <map>
 
-namespace LIB = ft;
+namespace LIB = LIBRARY;
 
 void unit_map()
 {
